@@ -19,6 +19,21 @@ class User(db.Model, UserMixin):
     phone = db.Column(db.String(30), nullable=False)
     address = db.Column(db.String(255), nullable=False)
 
+    events = db.relationship(
+    'Event',
+    back_populates='creator'
+    )
+
+    bookings = db.relationship(
+        'Booking',
+        back_populates='user'
+    )
+
+    comments = db.relationship(
+        'Comment',
+        back_populates='user'
+    )
+
 
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -30,6 +45,11 @@ class Category(db.Model):
     )
 
     description = db.Column(db.Text, nullable=True)
+
+    events = db.relationship(
+    'Event',
+    back_populates='category'
+    )
 
 
 class Event(db.Model):
@@ -71,6 +91,26 @@ class Event(db.Model):
 
     acknowledgement_text = db.Column(db.Text, nullable=True)
 
+    creator = db.relationship(
+    'User',
+    back_populates='events'
+    )
+
+    category = db.relationship(
+        'Category',
+        back_populates='events'
+    )
+
+    bookings = db.relationship(
+        'Booking',
+        back_populates='event'
+    )
+
+    comments = db.relationship(
+        'Comment',
+        back_populates='event'
+    )
+
 
 class Booking(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -100,6 +140,16 @@ class Booking(db.Model):
         default=datetime.utcnow
     )
 
+    user = db.relationship(
+    'User',
+    back_populates='bookings'
+    )
+
+    event = db.relationship(
+        'Event',
+        back_populates='bookings'
+    )
+
 
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -123,3 +173,14 @@ class Comment(db.Model):
         nullable=False,
         default=datetime.utcnow
     )
+
+    user = db.relationship(
+    'User',
+    back_populates='comments'
+    )
+
+    event = db.relationship(
+        'Event',
+        back_populates='comments'
+    )
+    

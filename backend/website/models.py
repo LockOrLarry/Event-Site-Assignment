@@ -20,8 +20,8 @@ class User(db.Model, UserMixin):
     address = db.Column(db.String(255), nullable=False)
 
     events = db.relationship(
-    'Event',
-    back_populates='creator'
+        'Event',
+        back_populates='creator'
     )
 
     bookings = db.relationship(
@@ -47,8 +47,8 @@ class Category(db.Model):
     description = db.Column(db.Text, nullable=True)
 
     events = db.relationship(
-    'Event',
-    back_populates='category'
+        'Event',
+        back_populates='category'
     )
 
 
@@ -92,8 +92,8 @@ class Event(db.Model):
     acknowledgement_text = db.Column(db.Text, nullable=True)
 
     creator = db.relationship(
-    'User',
-    back_populates='events'
+        'User',
+        back_populates='events'
     )
 
     category = db.relationship(
@@ -109,6 +109,25 @@ class Event(db.Model):
     comments = db.relationship(
         'Comment',
         back_populates='event'
+    )
+
+    __table_args__ = (
+        db.CheckConstraint(
+            'price > 0',
+            name='check_event_price_positive'
+        ),
+        db.CheckConstraint(
+            'capacity > 0',
+            name='check_event_capacity_positive'
+        ),
+        db.CheckConstraint(
+            "status IN ('Open', 'Inactive', 'Sold Out', 'Cancelled')",
+            name='check_event_status_valid'
+        ),
+        db.CheckConstraint(
+            "acknowledgement_type IN ('None', 'Generic', 'Enhanced')",
+            name='check_acknowledgement_type_valid'
+        ),
     )
 
 
@@ -141,13 +160,24 @@ class Booking(db.Model):
     )
 
     user = db.relationship(
-    'User',
-    back_populates='bookings'
+        'User',
+        back_populates='bookings'
     )
 
     event = db.relationship(
         'Event',
         back_populates='bookings'
+    )
+
+    __table_args__ = (
+        db.CheckConstraint(
+            'quantity >= 1',
+            name='check_booking_quantity_positive'
+        ),
+        db.CheckConstraint(
+            'price > 0',
+            name='check_booking_price_positive'
+        )
     )
 
 
@@ -175,12 +205,11 @@ class Comment(db.Model):
     )
 
     user = db.relationship(
-    'User',
-    back_populates='comments'
+        'User',
+        back_populates='comments'
     )
 
     event = db.relationship(
         'Event',
         back_populates='comments'
     )
-    

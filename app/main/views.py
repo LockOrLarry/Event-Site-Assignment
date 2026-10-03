@@ -1,7 +1,7 @@
 from flask import Blueprint
-from .services import get_all_events, get_event_by_id, get_tickets_remaining
+from ..services import get_all_events, get_event_by_id, get_tickets_remaining
 
-main_bp = Blueprint('main', __name__)
+from . import main_bp
 
 @main_bp.route('/')
 def index():

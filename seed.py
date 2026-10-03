@@ -1,5 +1,5 @@
-from website import create_app, db
-from website.models import User, Category, Event, Booking, Comment
+from app import create_app, db
+from app.models import User, Category, Event, Booking, Comment
 from datetime import datetime
 
 app = create_app()

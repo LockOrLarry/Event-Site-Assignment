@@ -1,5 +1,6 @@
 from . import db
-from .models import User, Event, Booking
+from datetime import datetime
+from .models import User, Event, Booking, Category
 
 
 def get_user_by_id(user_id):
@@ -9,6 +10,21 @@ def get_user_by_id(user_id):
 def get_all_events():
     return db.session.scalars(
         db.select(Event)
+    ).all()
+
+
+def get_all_categories():
+    return db.session.scalars(
+        db.select(Category).order_by(Category.id)
+    ).all()
+
+
+def get_featured_events(limit=4):
+    return db.session.scalars(
+        db.select(Event)
+        .where(Event.status == 'Open')
+        .order_by(Event.event_date)
+        .limit(limit)
     ).all()
 
 

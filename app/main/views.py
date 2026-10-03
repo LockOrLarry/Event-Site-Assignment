@@ -1,13 +1,15 @@
 from flask import Blueprint, render_template
-from ..services import get_all_events, get_event_by_id, get_tickets_remaining
+from ..services import get_all_events, get_all_categories, get_featured_events, get_event_by_id, get_tickets_remaining
 
 from . import main_bp
 
 @main_bp.route('/')
 def index():
-    events = get_all_events()
-
-    return render_template('index.html', events=events)
+    return render_template(
+        'index.html',
+        categories=get_all_categories(),
+        featured=get_featured_events()
+    )
 
 @main_bp.route('/events/<int:event_id>')
 def event_detail(event_id):

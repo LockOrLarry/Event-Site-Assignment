@@ -2,6 +2,21 @@
 
 {% block content %}
 
+{% set badge_colours = {
+'Open': 'success',
+'Sold Out': 'danger',
+'Inactive': 'secondary',
+'Cancelled': 'dark'
+} %}
+
+{% set eyebrows = {
+'Food Festivals': 'Discover & Taste',
+'Dining Experiences': 'Special Occasions',
+'Cooking Workshops': 'Learn & Create',
+'Tastings': 'Sip & Sample',
+'Cultural Food Events': 'Taste the World'
+} %}
+
 <section class="hero-section py-5">
   <div class="container-xl">
     <div class="row align-items-center g-5 position-relative">
@@ -116,25 +131,11 @@
     </div>
 
     <div class="d-flex flex-wrap justify-content-center gap-3">
-      <a href="#food-festivals" class="btn btn-outline-dark rounded-pill px-4">
-        Food Festivals
+      {% for category in categories %}
+      <a href="#{{ category.name | lower | replace(' ', '-') }}" class="btn btn-outline-dark rounded-pill px-4">
+        {{ category.name }}
       </a>
-
-      <a href="#dining-experiences" class="btn btn-outline-dark rounded-pill px-4">
-        Dining Experiences
-      </a>
-
-      <a href="#cooking-workshops" class="btn btn-outline-dark rounded-pill px-4">
-        Cooking Workshops
-      </a>
-
-      <a href="#tastings" class="btn btn-outline-dark rounded-pill px-4">
-        Tastings
-      </a>
-
-      <a href="#cultural-food-events" class="btn btn-outline-dark rounded-pill px-4">
-        Cultural Food Events
-      </a>
+      {% endfor %}
     </div>
   </div>
 </section>
@@ -150,10 +151,11 @@
     </div>
 
     <div class="row g-4">
+      {% for event in featured %}
       <div class="col-12 col-md-6 col-xl-3">
         <article class="featured-card card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
           <div class="featured-card__image position-relative">
-            <img src="static/img/Night-Feast.webp" alt="Brisbane Street Food Festival" class="card-img-top" />
+            <img src="{{ url_for('static', filename=event.image_path) }}" alt="{{ event.name }}" class="card-img-top" />
 
             <span class="badge rounded-pill text-bg-success position-absolute top-0 end-0 m-3">
               OPEN
@@ -162,11 +164,11 @@
 
           <div class="card-body d-flex flex-column p-4">
             <span class="featured-category text-uppercase fw-semibold small mb-2">
-              Food Festival
+              {{ event.category.name }}
             </span>
 
             <h3 class="card-title h5 fw-bold">
-              Brisbane Street Food Festival
+              {{ event.name }}
             </h3>
 
             <div class="d-flex flex-wrap gap-3 text-secondary small my-3">
@@ -174,14 +176,14 @@
                 <svg class="section-icon" aria-hidden="true">
                   <use href="#icon-calendar"></use>
                 </svg>
-                <span>12 Sep</span>
+                <span>{{ event.event_date.day }} {{ event.event_date.strftime('%b') }}</span>
               </div>
 
               <div class="d-flex align-items-center gap-2">
                 <svg class="section-icon" aria-hidden="true">
                   <use href="#icon-location"></use>
                 </svg>
-                <span>South Bank</span>
+                <span>{{ event.location }}</span>
               </div>
             </div>
 
@@ -190,194 +192,49 @@
                 <svg class="section-icon" aria-hidden="true">
                   <use href="#icon-ticket"></use>
                 </svg>
-                <strong>From $25</strong>
+                <strong>From $${{ '%.0f' % event.price }}</strong>
               </div>
 
-              <a href="event-details.html" class="btn btn-dark btn-sm">
+              <a href="{{ url_for('main.event_detail', event_id=event.id) }}" class="btn btn-dark btn-sm">
                 View Details
               </a>
             </div>
           </div>
         </article>
       </div>
-
-      <div class="col-12 col-md-6 col-xl-3">
-        <article class="featured-card card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
-          <div class="featured-card__image position-relative">
-            <img src="static/img/Japanese Omakese Night.webp" alt="Japanese Omakase Night" class="card-img-top" />
-
-            <span class="badge rounded-pill text-bg-danger position-absolute top-0 end-0 m-3">
-              SOLD OUT
-            </span>
-          </div>
-
-          <div class="card-body d-flex flex-column p-4">
-            <span class="featured-category text-uppercase fw-semibold small mb-2">
-              Dining Experience
-            </span>
-
-            <h3 class="card-title h5 fw-bold">Japanese Omakase Night</h3>
-
-            <div class="d-flex flex-wrap gap-3 text-secondary small my-3">
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-calendar"></use>
-                </svg>
-                <span>8 Sep</span>
-              </div>
-
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-location"></use>
-                </svg>
-                <span>Brisbane CBD</span>
-              </div>
-            </div>
-
-            <div class="d-flex justify-content-between align-items-center gap-2 border-top pt-3 mt-auto">
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-ticket"></use>
-                </svg>
-                <strong>From $120</strong>
-              </div>
-
-              <a href="event-details.html" class="btn btn-dark btn-sm">
-                View Details
-              </a>
-            </div>
-          </div>
-        </article>
-      </div>
-
-      <div class="col-12 col-md-6 col-xl-3">
-        <article class="featured-card card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
-          <div class="featured-card__image position-relative">
-            <img src="static/img/Handmade Pasta Workshop.webp" alt="Handmade Pasta Workshop" class="card-img-top" />
-
-            <span class="badge rounded-pill text-bg-success position-absolute top-0 end-0 m-3">
-              OPEN
-            </span>
-          </div>
-
-          <div class="card-body d-flex flex-column p-4">
-            <span class="featured-category text-uppercase fw-semibold small mb-2">
-              Cooking Workshop
-            </span>
-
-            <h3 class="card-title h5 fw-bold">Handmade Pasta Workshop</h3>
-
-            <div class="d-flex flex-wrap gap-3 text-secondary small my-3">
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-calendar"></use>
-                </svg>
-                <span>20 Sep</span>
-              </div>
-
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-location"></use>
-                </svg>
-                <span>West End</span>
-              </div>
-            </div>
-
-            <div class="d-flex justify-content-between align-items-center gap-2 border-top pt-3 mt-auto">
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-ticket"></use>
-                </svg>
-                <strong>From $65</strong>
-              </div>
-
-              <a href="event-details.html" class="btn btn-dark btn-sm">
-                View Details
-              </a>
-            </div>
-          </div>
-        </article>
-      </div>
-
-      <div class="col-12 col-md-6 col-xl-3">
-        <article class="featured-card card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
-          <div class="featured-card__image position-relative">
-            <img src="static/img/Artisan Chocolate Tasting.webp" alt="Artisan Chocolate Tasting" class="card-img-top" />
-
-            <span class="badge rounded-pill text-bg-success position-absolute top-0 end-0 m-3">
-              OPEN
-            </span>
-          </div>
-
-          <div class="card-body d-flex flex-column p-4">
-            <span class="featured-category text-uppercase fw-semibold small mb-2">
-              Tasting
-            </span>
-
-            <h3 class="card-title h5 fw-bold">
-              Artisan Chocolate Tasting
-            </h3>
-
-            <div class="d-flex flex-wrap gap-3 text-secondary small my-3">
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-calendar"></use>
-                </svg>
-                <span>25 Sep</span>
-              </div>
-
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-location"></use>
-                </svg>
-                <span>New Farm</span>
-              </div>
-            </div>
-
-            <div class="d-flex justify-content-between align-items-center gap-2 border-top pt-3 mt-auto">
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-ticket"></use>
-                </svg>
-                <strong>From $45</strong>
-              </div>
-
-              <a href="event-details.html" class="btn btn-dark btn-sm">
-                View Details
-              </a>
-            </div>
-          </div>
-        </article>
-      </div>
+      {% endfor %}
     </div>
   </div>
 </section>
 
-<section id="food-festivals" class="food-festivals-section py-5">
+{% for category in categories %}
+<section id="{{ category.name | lower | replace(' ', '-')}}" class="py-5">
   <div class="container-xl">
     <div class="text-center mb-5">
       <span class="section-eyebrow d-block text-uppercase fw-bold small mb-2">
-        DISCOVER &amp; TASTE
+        {{ eyebrows[category.name] }}
       </span>
 
-      <h2 class="display-6 fw-bold">Food Festivals</h2>
+      <h2 class="display-6 fw-bold">{{ category.name }}</h2>
     </div>
 
     <div class="row g-4">
+      {% for event in category.events | sort(attribute='event_date') %}
       <div class="col-6 col-lg-4 col-xl-3">
         <article class="event-card card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
           <div class="event-card__top position-relative">
-            <img src="static/img/Night-Feast.webp" alt="Brisbane Street Food Festival"
+            <img src="{{ url_for('static', filename=event.image_path) }}" alt="{{ event.title }}"
               class="event-image card-img-top" />
 
-            <span class="badge rounded-pill text-bg-success position-absolute top-0 end-0 m-3">
-              OPEN
+            <span
+              class="badge rounded-pill text-bg-{{ badge_colours[event.status] }} position-absolute top-0 end-0 m-3">
+              {{ event.status | upper }}
             </span>
           </div>
 
           <div class="card-body d-flex flex-column p-4">
             <h3 class="card-title h5 fw-bold">
-              Brisbane Street Food Festival
+              {{ event.title }}
             </h3>
 
             <div class="d-flex flex-column gap-2 text-secondary small my-3">
@@ -385,944 +242,36 @@
                 <svg class="section-icon" aria-hidden="true">
                   <use href="#icon-calendar"></use>
                 </svg>
-                <span>12 September</span>
+                <span>{{ event.event_date.day }} {{ event.event_date.strftime('%B') }}</span>
               </div>
 
               <div class="d-flex align-items-center gap-2">
                 <svg class="section-icon" aria-hidden="true">
                   <use href="#icon-location"></use>
                 </svg>
-                <span>South Bank</span>
+                <span>{{ event.location }}</span>
               </div>
 
               <div class="d-flex align-items-center gap-2">
                 <svg class="section-icon" aria-hidden="true">
                   <use href="#icon-ticket"></use>
                 </svg>
-                <span>From $25</span>
+                <span>From ${{ '%.0f' % event.price }}</span>
               </div>
             </div>
 
-            <a href="event-details.html" class="btn btn-dark w-100 mt-auto">
+            <a href="{{ url_for('main.event_detail', event_id=event.id) }}" class="btn btn-dark w-100 mt-auto">
               View Details
             </a>
           </div>
         </article>
       </div>
-
-      <div class="col-6 col-lg-4 col-xl-3">
-        <article class="event-card card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
-          <div class="event-card__top position-relative">
-            <img src="static/img/Riverside Food and Wine.webp" alt="Riverside Food and Wine Festival"
-              class="event-image card-img-top" />
-
-            <span class="badge rounded-pill text-bg-success position-absolute top-0 end-0 m-3">
-              OPEN
-            </span>
-          </div>
-
-          <div class="card-body d-flex flex-column p-4">
-            <h3 class="card-title h5 fw-bold">
-              Riverside Food &amp; Wine Festival
-            </h3>
-
-            <div class="d-flex flex-column gap-2 text-secondary small my-3">
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-calendar"></use>
-                </svg>
-                <span>19 September</span>
-              </div>
-
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-location"></use>
-                </svg>
-                <span>Kangaroo Point</span>
-              </div>
-
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-ticket"></use>
-                </svg>
-                <span>From $35</span>
-              </div>
-            </div>
-
-            <a href="event-details.html" class="btn btn-dark w-100 mt-auto">
-              View Details
-            </a>
-          </div>
-        </article>
-      </div>
-
-      <div class="col-6 col-lg-4 col-xl-3">
-        <article class="event-card card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
-          <div class="event-card__top position-relative">
-            <img src="static/img/Vegan Food Festival.webp" alt="Brisbane Vegan Food Festival"
-              class="event-image card-img-top" />
-
-            <span class="badge rounded-pill text-bg-secondary position-absolute top-0 end-0 m-3">
-              INACTIVE
-            </span>
-          </div>
-
-          <div class="card-body d-flex flex-column p-4">
-            <h3 class="card-title h5 fw-bold">
-              Brisbane Vegan Food Festival
-            </h3>
-
-            <div class="d-flex flex-column gap-2 text-secondary small my-3">
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-calendar"></use>
-                </svg>
-                <span>26 September</span>
-              </div>
-
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-location"></use>
-                </svg>
-                <span>West End</span>
-              </div>
-
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-ticket"></use>
-                </svg>
-                <span>From $18</span>
-              </div>
-            </div>
-
-            <a href="event-details.html" class="btn btn-dark w-100 mt-auto">
-              View Details
-            </a>
-          </div>
-        </article>
-      </div>
-
-      <div class="col-6 col-lg-4 col-xl-3">
-        <article class="event-card card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
-          <div class="event-card__top position-relative">
-            <img src="static/img/Night Noodle Markets.webp" alt="Night Noodle Markets"
-              class="event-image card-img-top" />
-
-            <span class="badge rounded-pill text-bg-dark position-absolute top-0 end-0 m-3">
-              CANCELLED
-            </span>
-          </div>
-
-          <div class="card-body d-flex flex-column p-4">
-            <h3 class="card-title h5 fw-bold">Night Noodle Markets</h3>
-
-            <div class="d-flex flex-column gap-2 text-secondary small my-3">
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-calendar"></use>
-                </svg>
-                <span>3 October</span>
-              </div>
-
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-location"></use>
-                </svg>
-                <span>South Bank</span>
-              </div>
-
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-ticket"></use>
-                </svg>
-                <span>From $15</span>
-              </div>
-            </div>
-
-            <a href="event-details.html" class="btn btn-dark w-100 mt-auto">
-              View Details
-            </a>
-          </div>
-        </article>
-      </div>
+      {% else %}
+      <p class="text-center text-secondary">No upcoming events in this category.</p>
+      {% endfor %}
     </div>
   </div>
 </section>
+{% endfor %}
 
-<section id="dining-experiences" class="py-5">
-  <div class="container-xl">
-    <div class="text-center mb-5">
-      <span class="section-eyebrow d-block text-uppercase fw-bold small mb-2">
-        SPECIAL OCCASIONS
-      </span>
-
-      <h2 class="display-6 fw-bold">Dining Experiences</h2>
-    </div>
-
-    <div class="row g-4">
-      <div class="col-6 col-lg-4 col-xl-3">
-        <article class="event-card card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
-          <div class="event-card__top position-relative">
-            <img src="static/img/Japanese Omakese Night.webp" alt="Japanese Omakase Night"
-              class="event-image card-img-top" />
-
-            <span class="badge rounded-pill text-bg-danger position-absolute top-0 end-0 m-3">
-              SOLD OUT
-            </span>
-          </div>
-
-          <div class="card-body d-flex flex-column p-4">
-            <h3 class="card-title h5 fw-bold">Japanese Omakase Night</h3>
-
-            <div class="d-flex flex-column gap-2 text-secondary small my-3">
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-calendar"></use>
-                </svg>
-                <span>8 September</span>
-              </div>
-
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-location"></use>
-                </svg>
-                <span>Brisbane CBD</span>
-              </div>
-
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-ticket"></use>
-                </svg>
-                <span>From $120</span>
-              </div>
-            </div>
-
-            <a href="event-details.html" class="btn btn-dark w-100 mt-auto">
-              View Details
-            </a>
-          </div>
-        </article>
-      </div>
-
-      <div class="col-6 col-lg-4 col-xl-3">
-        <article class="event-card card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
-          <div class="event-card__top position-relative">
-            <img src="static/img/Rooftop Italian Dinner.webp" alt="Rooftop Italian Dinner"
-              class="event-image card-img-top" />
-
-            <div class="position-absolute top-0 end-0 m-3 d-flex flex-column gap-2 align-items-end">
-              <span class="badge rounded-pill text-bg-success">
-                OPEN
-              </span>
-            </div>
-          </div>
-
-          <div class="card-body d-flex flex-column p-4">
-            <h3 class="card-title h5 fw-bold">Rooftop Italian Dinner</h3>
-
-            <div class="d-flex flex-column gap-2 text-secondary small my-3">
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-calendar"></use>
-                </svg>
-                <span>24 September</span>
-              </div>
-
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-location"></use>
-                </svg>
-                <span>Fortitude Valley</span>
-              </div>
-
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-ticket"></use>
-                </svg>
-                <span>From $85</span>
-              </div>
-            </div>
-
-            <a href="event-details.html" class="btn btn-dark w-100 mt-auto">
-              View Details
-            </a>
-          </div>
-        </article>
-      </div>
-
-      <div class="col-6 col-lg-4 col-xl-3">
-        <article class="event-card card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
-          <div class="event-card__top position-relative">
-            <img src="static/img/CandleLight French Dining.webp" alt="Candlelight French Dining"
-              class="event-image card-img-top" />
-
-            <span class="badge rounded-pill text-bg-success position-absolute top-0 end-0 m-3">
-              OPEN
-            </span>
-          </div>
-
-          <div class="card-body d-flex flex-column p-4">
-            <h3 class="card-title h5 fw-bold">
-              Candlelight French Dining
-            </h3>
-
-            <div class="d-flex flex-column gap-2 text-secondary small my-3">
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-calendar"></use>
-                </svg>
-                <span>2 October</span>
-              </div>
-
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-location"></use>
-                </svg>
-                <span>New Farm</span>
-              </div>
-
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-ticket"></use>
-                </svg>
-                <span>From $110</span>
-              </div>
-            </div>
-
-            <a href="event-details.html" class="btn btn-dark w-100 mt-auto">
-              View Details
-            </a>
-          </div>
-        </article>
-      </div>
-
-      <div class="col-6 col-lg-4 col-xl-3">
-        <article class="event-card card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
-          <div class="event-card__top position-relative">
-            <img src="static/img/dining-experience.webp" alt="Chef's Table Experience"
-              class="event-image card-img-top" />
-
-            <span class="badge rounded-pill text-bg-success position-absolute top-0 end-0 m-3">
-              OPEN
-            </span>
-          </div>
-
-          <div class="card-body d-flex flex-column p-4">
-            <h3 class="card-title h5 fw-bold">Chef's Table Experience</h3>
-
-            <div class="d-flex flex-column gap-2 text-secondary small my-3">
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-calendar"></use>
-                </svg>
-                <span>9 October</span>
-              </div>
-
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-location"></use>
-                </svg>
-                <span>South Brisbane</span>
-              </div>
-
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-ticket"></use>
-                </svg>
-                <span>From $145</span>
-              </div>
-            </div>
-
-            <a href="event-details.html" class="btn btn-dark w-100 mt-auto">
-              View Details
-            </a>
-          </div>
-        </article>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="cooking-workshops" class="py-5">
-  <div class="container-xl">
-    <div class="text-center mb-5">
-      <span class="section-eyebrow d-block text-uppercase fw-bold small mb-2">
-        LEARN &amp; CREATE
-      </span>
-
-      <h2 class="display-6 fw-bold">Cooking Workshops</h2>
-    </div>
-
-    <div class="row g-4">
-      <div class="col-6 col-lg-4 col-xl-3">
-        <article class="event-card card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
-          <div class="event-card__top position-relative">
-            <img src="static/img/Handmade Pasta Workshop.webp" alt="Handmade Pasta Workshop"
-              class="event-image card-img-top" />
-
-            <span class="badge rounded-pill text-bg-success position-absolute top-0 end-0 m-3">
-              OPEN
-            </span>
-          </div>
-
-          <div class="card-body d-flex flex-column p-4">
-            <h3 class="card-title h5 fw-bold">Handmade Pasta Workshop</h3>
-
-            <div class="d-flex flex-column gap-2 text-secondary small my-3">
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-calendar"></use>
-                </svg>
-                <span>20 September</span>
-              </div>
-
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-location"></use>
-                </svg>
-                <span>West End</span>
-              </div>
-
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-ticket"></use>
-                </svg>
-                <span>From $65</span>
-              </div>
-            </div>
-
-            <a href="event-details.html" class="btn btn-dark w-100 mt-auto">
-              View Details
-            </a>
-          </div>
-        </article>
-      </div>
-
-      <div class="col-6 col-lg-4 col-xl-3">
-        <article class="event-card card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
-          <div class="event-card__top position-relative">
-            <img src="static/img/Sushi Making Masterclass.webp" alt="Sushi Making Masterclass"
-              class="event-image card-img-top" />
-
-            <span class="badge rounded-pill text-bg-success position-absolute top-0 end-0 m-3">
-              OPEN
-            </span>
-          </div>
-
-          <div class="card-body d-flex flex-column p-4">
-            <h3 class="card-title h5 fw-bold">
-              Sushi Making Masterclass
-            </h3>
-
-            <div class="d-flex flex-column gap-2 text-secondary small my-3">
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-calendar"></use>
-                </svg>
-                <span>27 September</span>
-              </div>
-
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-location"></use>
-                </svg>
-                <span>Brisbane CBD</span>
-              </div>
-
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-ticket"></use>
-                </svg>
-                <span>From $75</span>
-              </div>
-            </div>
-
-            <a href="event-details.html" class="btn btn-dark w-100 mt-auto">
-              View Details
-            </a>
-          </div>
-        </article>
-      </div>
-
-      <div class="col-6 col-lg-4 col-xl-3">
-        <article class="event-card card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
-          <div class="event-card__top position-relative">
-            <img src="static/img/Artisan Pizza Workshop.webp" alt="Artisan Pizza Workshop"
-              class="event-image card-img-top" />
-
-            <span class="badge rounded-pill text-bg-success position-absolute top-0 end-0 m-3">
-              OPEN
-            </span>
-          </div>
-
-          <div class="card-body d-flex flex-column p-4">
-            <h3 class="card-title h5 fw-bold">Artisan Pizza Workshop</h3>
-
-            <div class="d-flex flex-column gap-2 text-secondary small my-3">
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-calendar"></use>
-                </svg>
-                <span>4 October</span>
-              </div>
-
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-location"></use>
-                </svg>
-                <span>Newstead</span>
-              </div>
-
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-ticket"></use>
-                </svg>
-                <span>From $60</span>
-              </div>
-            </div>
-
-            <a href="event-details.html" class="btn btn-dark w-100 mt-auto">
-              View Details
-            </a>
-          </div>
-        </article>
-      </div>
-
-      <div class="col-6 col-lg-4 col-xl-3">
-        <article class="event-card card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
-          <div class="event-card__top position-relative">
-            <img src="static/img/Pastry Class.webp" alt="French Pastry Class" class="event-image card-img-top" />
-
-            <span class="badge rounded-pill text-bg-danger position-absolute top-0 end-0 m-3">
-              SOLD OUT
-            </span>
-          </div>
-
-          <div class="card-body d-flex flex-column p-4">
-            <h3 class="card-title h5 fw-bold">French Pastry Class</h3>
-
-            <div class="d-flex flex-column gap-2 text-secondary small my-3">
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-calendar"></use>
-                </svg>
-                <span>11 October</span>
-              </div>
-
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-location"></use>
-                </svg>
-                <span>Paddington</span>
-              </div>
-
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-ticket"></use>
-                </svg>
-                <span>From $70</span>
-              </div>
-            </div>
-
-            <a href="event-details.html" class="btn btn-dark w-100 mt-auto">
-              View Details
-            </a>
-          </div>
-        </article>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="tastings" class="py-5">
-  <div class="container-xl">
-    <div class="text-center mb-5">
-      <span class="section-eyebrow d-block text-uppercase fw-bold small mb-2">
-        SIP &amp; SAMPLE
-      </span>
-
-      <h2 class="display-6 fw-bold">Tastings</h2>
-    </div>
-
-    <div class="row g-4">
-      <div class="col-6 col-lg-4 col-xl-3">
-        <article class="event-card card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
-          <div class="event-card__top position-relative">
-            <img src="static/img/Artisan Chocolate Tasting.webp" alt="Artisan Chocolate Tasting"
-              class="event-image card-img-top" />
-
-            <span class="badge rounded-pill text-bg-success position-absolute top-0 end-0 m-3">
-              OPEN
-            </span>
-          </div>
-
-          <div class="card-body d-flex flex-column p-4">
-            <h3 class="card-title h5 fw-bold">
-              Artisan Chocolate Tasting
-            </h3>
-
-            <div class="d-flex flex-column gap-2 text-secondary small my-3">
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-calendar"></use>
-                </svg>
-                <span>25 September</span>
-              </div>
-
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-location"></use>
-                </svg>
-                <span>New Farm</span>
-              </div>
-
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-ticket"></use>
-                </svg>
-                <span>From $45</span>
-              </div>
-            </div>
-
-            <a href="event-details.html" class="btn btn-dark w-100 mt-auto">
-              View Details
-            </a>
-          </div>
-        </article>
-      </div>
-
-      <div class="col-6 col-lg-4 col-xl-3">
-        <article class="event-card card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
-          <div class="event-card__top position-relative">
-            <img src="static/img/Australian Wine Discovery.webp" alt="Australian Wine Discovery"
-              class="event-image card-img-top" />
-
-            <span class="badge rounded-pill text-bg-success position-absolute top-0 end-0 m-3">
-              OPEN
-            </span>
-          </div>
-
-          <div class="card-body d-flex flex-column p-4">
-            <h3 class="card-title h5 fw-bold">
-              Australian Wine Discovery
-            </h3>
-
-            <div class="d-flex flex-column gap-2 text-secondary small my-3">
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-calendar"></use>
-                </svg>
-                <span>1 October</span>
-              </div>
-
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-location"></use>
-                </svg>
-                <span>Brisbane CBD</span>
-              </div>
-
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-ticket"></use>
-                </svg>
-                <span>From $65</span>
-              </div>
-            </div>
-
-            <a href="event-details.html" class="btn btn-dark w-100 mt-auto">
-              View Details
-            </a>
-          </div>
-        </article>
-      </div>
-
-      <div class="col-6 col-lg-4 col-xl-3">
-        <article class="event-card card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
-          <div class="event-card__top position-relative">
-            <img src="static/img/Coffee Tasting.webp" alt="Specialty Coffee Tasting" class="event-image card-img-top" />
-
-            <div class="position-absolute top-0 end-0 m-3 d-flex flex-column gap-2 align-items-end">
-              <span class="badge rounded-pill text-bg-success">
-                OPEN
-              </span>
-            </div>
-          </div>
-
-          <div class="card-body d-flex flex-column p-4">
-            <h3 class="card-title h5 fw-bold">
-              Specialty Coffee Tasting
-            </h3>
-
-            <div class="d-flex flex-column gap-2 text-secondary small my-3">
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-calendar"></use>
-                </svg>
-                <span>8 October</span>
-              </div>
-
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-location"></use>
-                </svg>
-                <span>West End</span>
-              </div>
-
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-ticket"></use>
-                </svg>
-                <span>From $35</span>
-              </div>
-            </div>
-
-            <a href="event-details.html" class="btn btn-dark w-100 mt-auto">
-              View Details
-            </a>
-          </div>
-        </article>
-      </div>
-
-      <div class="col-6 col-lg-4 col-xl-3">
-        <article class="event-card card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
-          <div class="event-card__top position-relative">
-            <img src="static/img/Cheese and Wine Dining.webp" alt="Cheese and Wine Evening"
-              class="event-image card-img-top" />
-
-            <span class="badge rounded-pill text-bg-danger position-absolute top-0 end-0 m-3">
-              SOLD OUT
-            </span>
-          </div>
-
-          <div class="card-body d-flex flex-column p-4">
-            <h3 class="card-title h5 fw-bold">
-              Cheese &amp; Wine Evening
-            </h3>
-
-            <div class="d-flex flex-column gap-2 text-secondary small my-3">
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-calendar"></use>
-                </svg>
-                <span>14 October</span>
-              </div>
-
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-location"></use>
-                </svg>
-                <span>Teneriffe</span>
-              </div>
-
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-ticket"></use>
-                </svg>
-                <span>From $70</span>
-              </div>
-            </div>
-
-            <a href="event-details.html" class="btn btn-dark w-100 mt-auto">
-              View Details
-            </a>
-          </div>
-        </article>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="cultural-food-events" class="py-5">
-  <div class="container-xl">
-    <div class="text-center mb-5">
-      <span class="section-eyebrow d-block text-uppercase fw-bold small mb-2">
-        TASTE THE WORLD
-      </span>
-
-      <h2 class="display-6 fw-bold">Cultural Food Events</h2>
-    </div>
-
-    <div class="row g-4">
-      <div class="col-6 col-lg-4 col-xl-3">
-        <article class="event-card card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
-          <div class="event-card__top position-relative">
-            <img src="static/img/Moroccan Souk & Supper Night.webp" alt="Moroccan Souk and Supper Night"
-              class="event-image card-img-top" />
-
-            <span class="badge rounded-pill text-bg-secondary position-absolute top-0 end-0 m-3">
-              INACTIVE
-            </span>
-          </div>
-
-          <div class="card-body d-flex flex-column p-4">
-            <h3 class="card-title h5 fw-bold">
-              Moroccan Souk &amp; Supper Night
-            </h3>
-
-            <div class="d-flex flex-column gap-2 text-secondary small my-3">
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-calendar"></use>
-                </svg>
-                <span>27 August</span>
-              </div>
-
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-location"></use>
-                </svg>
-                <span>Fortitude Valley</span>
-              </div>
-
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-ticket"></use>
-                </svg>
-                <span>From $40</span>
-              </div>
-            </div>
-
-            <a href="event-details.html" class="btn btn-dark w-100 mt-auto">
-              View Details
-            </a>
-          </div>
-        </article>
-      </div>
-
-      <div class="col-6 col-lg-4 col-xl-3">
-        <article class="event-card card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
-          <div class="event-card__top position-relative">
-            <img src="static/img/Japanese Matsuri Dining.webp" alt="Japanese Matsuri Dinner"
-              class="event-image card-img-top" />
-
-            <span class="badge rounded-pill text-bg-success position-absolute top-0 end-0 m-3">
-              OPEN
-            </span>
-          </div>
-
-          <div class="card-body d-flex flex-column p-4">
-            <h3 class="card-title h5 fw-bold">Japanese Matsuri Dinner</h3>
-
-            <div class="d-flex flex-column gap-2 text-secondary small my-3">
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-calendar"></use>
-                </svg>
-                <span>5 October</span>
-              </div>
-
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-location"></use>
-                </svg>
-                <span>Brisbane CBD</span>
-              </div>
-
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-ticket"></use>
-                </svg>
-                <span>From $55</span>
-              </div>
-            </div>
-
-            <a href="event-details.html" class="btn btn-dark w-100 mt-auto">
-              View Details
-            </a>
-          </div>
-        </article>
-      </div>
-
-      <div class="col-6 col-lg-4 col-xl-3">
-        <article class="event-card card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
-          <div class="event-card__top position-relative">
-            <img src="static/img/indian-diwali-feast.webp" alt="Indian Diwali Feast" class="event-image card-img-top" />
-
-            <span class="badge rounded-pill text-bg-secondary position-absolute top-0 end-0 m-3">
-              INACTIVE
-            </span>
-          </div>
-
-          <div class="card-body d-flex flex-column p-4">
-            <h3 class="card-title h5 fw-bold">Indian Diwali Feast</h3>
-
-            <div class="d-flex flex-column gap-2 text-secondary small my-3">
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-calendar"></use>
-                </svg>
-                <span>12 October</span>
-              </div>
-
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-location"></use>
-                </svg>
-                <span>West End</span>
-              </div>
-
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-ticket"></use>
-                </svg>
-                <span>From $48</span>
-              </div>
-            </div>
-
-            <a href="event-details.html" class="btn btn-dark w-100 mt-auto">
-              View Details
-            </a>
-          </div>
-        </article>
-      </div>
-
-      <div class="col-6 col-lg-4 col-xl-3">
-        <article class="event-card card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
-          <div class="event-card__top position-relative">
-            <img src="static/img/Korean Dining.webp" alt="Korean Food and Culture Night"
-              class="event-image card-img-top" />
-
-            <span class="badge rounded-pill text-bg-dark position-absolute top-0 end-0 m-3">
-              CANCELLED
-            </span>
-          </div>
-
-          <div class="card-body d-flex flex-column p-4">
-            <h3 class="card-title h5 fw-bold">
-              Korean Food &amp; Culture Night
-            </h3>
-
-            <div class="d-flex flex-column gap-2 text-secondary small my-3">
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-calendar"></use>
-                </svg>
-                <span>19 October</span>
-              </div>
-
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-location"></use>
-                </svg>
-                <span>Sunnybank</span>
-              </div>
-
-              <div class="d-flex align-items-center gap-2">
-                <svg class="section-icon" aria-hidden="true">
-                  <use href="#icon-ticket"></use>
-                </svg>
-                <span>From $45</span>
-              </div>
-            </div>
-
-            <a href="event-details.html" class="btn btn-dark w-100 mt-auto">
-              View Details
-            </a>
-          </div>
-        </article>
-      </div>
-    </div>
-  </div>
-</section>
 {% endblock content %}

@@ -27,18 +27,28 @@ with app.app_context():
     )
 
     category1 = Category(
-        name='Central Asian Cuisine',
-        description='Food events featuring Central Asian cuisine and traditions.'
+        name='Food Festivals',
+        description='Festivals celebrating food, drinks, and culture.'
     )
 
     category2 = Category(
-        name='Italian Cuisine',
-        description='Food events focused on Italian dishes and cooking techniques.'
+        name='Dining Experiences',
+        description='Unique dining events that offer memorable culinary experiences.'
     )
 
     category3 = Category(
-        name='Baking',
-        description='Workshops and events focused on baking and pastry making.'
+        name='Cooking Workshops',
+        description='Workshops focused on teaching new cooking skills.'
+    )
+
+    category4 = Category(
+        name='Tastings',
+        description='Tasting events for food and beverages.'
+    )
+
+    category5 = Category(
+        name='Cultural Food Events',
+        description='Events celebrating food from different cultures and regions.'
     )
 
     db.session.add_all([
@@ -46,7 +56,9 @@ with app.app_context():
         user2,
         category1,
         category2,
-        category3
+        category3,
+        category4,
+        category5
     ])
 
     db.session.commit()
@@ -54,13 +66,13 @@ with app.app_context():
     event1 = Event(
         creator_id=user1.id,
         category_id=category1.id,
-        title='Uzbek Plov Workshop',
-        description='Learn how to prepare traditional Uzbek plov in a hands-on cooking workshop.',
-        event_date=datetime(2026, 10, 15, 18, 0),
-        location='Brisbane City',
-        price=35.00,
-        capacity=20,
-        image_path='images/plov-workshop.jpg',
+        title='Brisbane Street Food Festival',
+        description="Brisbane Street Food Festival brings together some of the city's favourite food trucks, independent vendors and local chefs for an evening dedicated to great food and community.",
+        event_date=datetime(2026, 9, 12, 16, 0),
+        location='South Bank',
+        price=25.00,
+        capacity=500,
+        image_path='img/Night-Feast.webp',
         status='Open',
         acknowledgement_type='None',
         acknowledgement_text=None
@@ -68,30 +80,285 @@ with app.app_context():
 
     event2 = Event(
         creator_id=user2.id,
-        category_id=category2.id,
-        title='Italian Pasta Masterclass',
-        description='Learn how to make fresh pasta from scratch and prepare classic Italian dishes.',
-        event_date=datetime(2026, 10, 22, 17, 30),
-        location='South Bank, Brisbane',
-        price=45.00,
-        capacity=15,
-        image_path='images/pasta-masterclass.jpg',
+        category_id=category1.id,
+        title='Riverside Food & Wine Festival',
+        description='Placeholder text.',
+        event_date=datetime(2026, 9, 19, 12, 0),
+        location='Kangaroo Point',
+        price=35.00,
+        capacity=400,
+        image_path='img/Riverside Food and Wine.webp',
         status='Open',
-        acknowledgement_type='Generic',
-        acknowledgement_text='We acknowledge the Traditional Custodians of the land on which this event is held.'
+        acknowledgement_type='None',
+        acknowledgement_text=None
     )
 
     event3 = Event(
         creator_id=user1.id,
-        category_id=category3.id,
-        title='Artisan Bread Workshop',
-        description='A practical workshop covering the fundamentals of preparing and baking artisan bread.',
-        event_date=datetime(2026, 11, 5, 10, 0),
-        location='West End, Brisbane',
-        price=30.00,
+        category_id=category1.id,
+        title='Brisbane Vegan Food Festival',
+        description='Placeholder text.',
+        event_date=datetime(2026, 9, 26, 10, 0),
+        location='West End',
+        price=18.00,
+        capacity=300,
+        image_path='img/Vegan Food Festival.webp',
+        status='Inactive',
+        acknowledgement_type='None',
+        acknowledgement_text=None
+    )
+
+    event4 = Event(
+        creator_id=user2.id,
+        category_id=category1.id,
+        title='Night Noodle Markets',
+        description='Placeholder text.',
+        event_date=datetime(2026, 10, 3, 17, 0),
+        location='South Bank',
+        price=15.00,
+        capacity=600,
+        image_path='img/Night Noodle Markets.webp',
+        status='Cancelled',
+        acknowledgement_type='None',
+        acknowledgement_text=None
+    )
+
+    event5 = Event(
+        creator_id=user1.id,
+        category_id=category2.id,
+        title='Japanese Omakase Night',
+        description='Placeholder text.',
+        event_date=datetime(2026, 9, 8, 19, 0),
+        location='Brisbane CBD',
+        price=120.00,
         capacity=12,
-        image_path='images/bread-workshop.jpg',
+        image_path='img/Japanese Omakese Night.webp',
+        status='Sold Out',
+        acknowledgement_type='None',
+        acknowledgement_text=None
+    )
+
+    event6 = Event(
+        creator_id=user2.id,
+        category_id=category2.id,
+        title='Rooftop Italian Dinner',
+        description='Placeholder text.',
+        event_date=datetime(2026, 9, 24, 18, 30),
+        location='Fortitude Valley',
+        price=85.00,
+        capacity=60,
+        image_path='img/Rooftop Italian Dinner.webp',
         status='Open',
+        acknowledgement_type='None',
+        acknowledgement_text=None
+    )
+
+    event7 = Event(
+        creator_id=user1.id,
+        category_id=category2.id,
+        title='Candlelight French Dining',
+        description='Placeholder text.',
+        event_date=datetime(2026, 10, 2, 19, 0),
+        location='New Farm',
+        price=110.00,
+        capacity=40,
+        image_path='img/CandleLight French Dining.webp',
+        status='Open',
+        acknowledgement_type='None',
+        acknowledgement_text=None
+    )
+
+    event8 = Event(
+        creator_id=user2.id,
+        category_id=category2.id,
+        title="Chef's Table Experience",
+        description='Placeholder text.',
+        event_date=datetime(2026, 10, 9, 18, 30),
+        location='South Brisbane',
+        price=145.00,
+        capacity=10,
+        image_path='img/dining-experience.webp',
+        status='Open',
+        acknowledgement_type='None',
+        acknowledgement_text=None
+    )
+
+    event9 = Event(
+        creator_id=user1.id,
+        category_id=category3.id,
+        title='Handmade Pasta Workshop',
+        description='Placeholder text.',
+        event_date=datetime(2026, 9, 20, 10, 0),
+        location='West End',
+        price=65.00,
+        capacity=16,
+        image_path='img/Handmade Pasta Workshop.webp',
+        status='Open',
+        acknowledgement_type='None',
+        acknowledgement_text=None
+    )
+
+    event10 = Event(
+        creator_id=user2.id,
+        category_id=category3.id,
+        title='Sushi Making Masterclass',
+        description='Placeholder text.',
+        event_date=datetime(2026, 9, 27, 13, 0),
+        location='Brisbane CBD',
+        price=75.00,
+        capacity=14,
+        image_path='img/Sushi Making Masterclass.webp',
+        status='Open',
+        acknowledgement_type='None',
+        acknowledgement_text=None
+    )
+
+    event11 = Event(
+        creator_id=user1.id,
+        category_id=category3.id,
+        title='Artisan Pizza Workshop',
+        description='Placeholder text.',
+        event_date=datetime(2026, 10, 4, 11, 0),
+        location='Newstead',
+        price=60.00,
+        capacity=18,
+        image_path='img/Artisan Pizza Workshop.webp',
+        status='Open',
+        acknowledgement_type='None',
+        acknowledgement_text=None
+    )
+
+    event12 = Event(
+        creator_id=user2.id,
+        category_id=category3.id,
+        title='French Pastry Class',
+        description='Placeholder text.',
+        event_date=datetime(2026, 10, 11, 9, 30),
+        location='Paddington',
+        price=70.00,
+        capacity=12,
+        image_path='img/Pastry Class.webp',
+        status='Sold Out',
+        acknowledgement_type='None',
+        acknowledgement_text=None
+    )
+
+    event13 = Event(
+        creator_id=user1.id,
+        category_id=category4.id,
+        title='Artisan Chocolate Tasting',
+        description='Placeholder text.',
+        event_date=datetime(2026, 9, 25, 15, 0),
+        location='New Farm',
+        price=45.00,
+        capacity=30,
+        image_path='img/Artisan Chocolate Tasting.webp',
+        status='Open',
+        acknowledgement_type='None',
+        acknowledgement_text=None
+    )
+
+    event14 = Event(
+        creator_id=user2.id,
+        category_id=category4.id,
+        title='Australian Wine Discovery',
+        description='Placeholder text.',
+        event_date=datetime(2026, 10, 1, 18, 0),
+        location='Brisbane CBD',
+        price=65.00,
+        capacity=40,
+        image_path='img/Australian Wine Discovery.webp',
+        status='Open',
+        acknowledgement_type='None',
+        acknowledgement_text=None
+    )
+
+    event15 = Event(
+        creator_id=user1.id,
+        category_id=category4.id,
+        title='Specialty Coffee Tasting',
+        description='Placeholder text.',
+        event_date=datetime(2026, 10, 8, 9, 0),
+        location='West End',
+        price=35.00,
+        capacity=20,
+        image_path='img/Coffee Tasting.webp',
+        status='Open',
+        acknowledgement_type='None',
+        acknowledgement_text=None
+    )
+
+    event16 = Event(
+        creator_id=user2.id,
+        category_id=category4.id,
+        title='Cheese & Wine Evening',
+        description='Placeholder text.',
+        event_date=datetime(2026, 10, 14, 18, 30),
+        location='Teneriffe',
+        price=70.00,
+        capacity=30,
+        image_path='img/Cheese and Wine Dining.webp',
+        status='Sold Out',
+        acknowledgement_type='None',
+        acknowledgement_text=None
+    )
+
+    event17 = Event(
+        creator_id=user1.id,
+        category_id=category5.id,
+        title='Moroccan Souk & Supper Night',
+        description='Placeholder text.',
+        event_date=datetime(2026, 8, 27, 18, 0),
+        location='Fortitude Valley',
+        price=40.00,
+        capacity=80,
+        image_path='img/Moroccan Souk & Supper Night.webp',
+        status='Inactive',
+        acknowledgement_type='None',
+        acknowledgement_text=None
+    )
+
+    event18 = Event(
+        creator_id=user2.id,
+        category_id=category5.id,
+        title='Japanese Matsuri Dinner',
+        description='Placeholder text.',
+        event_date=datetime(2026, 10, 5, 17, 30),
+        location='Brisbane CBD',
+        price=55.00,
+        capacity=100,
+        image_path='img/Japanese Matsuri Dining.webp',
+        status='Open',
+        acknowledgement_type='None',
+        acknowledgement_text=None
+    )
+
+    event19 = Event(
+        creator_id=user1.id,
+        category_id=category5.id,
+        title='Indian Diwali Feast',
+        description='Placeholder text.',
+        event_date=datetime(2026, 10, 12, 18, 0),
+        location='West End',
+        price=48.00,
+        capacity=120,
+        image_path='img/indian-diwali-feast.webp',
+        status='Inactive',
+        acknowledgement_type='None',
+        acknowledgement_text=None
+    )
+
+    event20 = Event(
+        creator_id=user2.id,
+        category_id=category5.id,
+        title='Korean Food & Culture Night',
+        description='Placeholder text.',
+        event_date=datetime(2026, 10, 19, 18, 0),
+        location='Sunnybank',
+        price=45.00,
+        capacity=90,
+        image_path='img/Korean Dining.webp',
+        status='Cancelled',
         acknowledgement_type='None',
         acknowledgement_text=None
     )
@@ -99,7 +366,24 @@ with app.app_context():
     db.session.add_all([
         event1,
         event2,
-        event3
+        event3,
+        event4,
+        event5,
+        event6,
+        event7,
+        event8,
+        event9,
+        event10,
+        event11,
+        event12,
+        event13,
+        event14,
+        event15,
+        event16,
+        event17,
+        event18,
+        event19,
+        event20
     ])
 
     db.session.commit()

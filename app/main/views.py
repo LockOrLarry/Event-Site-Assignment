@@ -1,23 +1,15 @@
-from flask import Blueprint
-from ..services import get_all_events, get_event_by_id, get_tickets_remaining
+from flask import Blueprint, render_template
+from ..services import get_all_events, get_all_categories, get_featured_events, get_event_by_id, get_tickets_remaining
 
 from . import main_bp
 
 @main_bp.route('/')
 def index():
-    events = get_all_events()
-
-    return {
-        'events': [
-            {
-                'id': event.id,
-                'title': event.title,
-                'price': float(event.price),
-                'capacity': event.capacity
-            }
-            for event in events
-        ]
-    }
+    return render_template(
+        'index.html',
+        categories=get_all_categories(),
+        featured=get_featured_events()
+    )
 
 @main_bp.route('/events/<int:event_id>')
 def event_detail(event_id):
@@ -39,5 +31,13 @@ def event_detail(event_id):
         'creator': event.creator.first_name,
         'category': event.category.name
     }
+
+@main_bp.route('/history/')
+def booking_history():
+    return render_template('booking-history.html')
+
+@main_bp.route('/create/')
+def create_event():
+    return render_template('create-event.html')
 
     

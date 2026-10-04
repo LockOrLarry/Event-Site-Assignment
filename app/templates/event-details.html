@@ -281,7 +281,7 @@
   </div>
 </section>
 
-<section class="comments-section py-5">
+<section id="comments" class="comments-section py-5">
   <div class="container-xl">
     <div class="row">
       <div class="col-lg-8">
@@ -291,85 +291,55 @@
             <h2 class="fw-bold mb-0">Comments</h2>
           </div>
 
-          <span class="text-secondary">{{ event.comments | length }} comments</span>
+          <span class="text-secondary">{{ event.comments | length }} comment{{ '' if event.comments | length == 1 else
+            's' }}</span>
         </div>
 
         <div class="d-flex flex-column gap-3">
+          {% for comment in event.comments | sort(attribute='comment_date', reverse=True) %}
           <article class="comment-card bg-white rounded-4 p-4 shadow-sm">
             <div class="d-flex align-items-center gap-3 mb-3">
               <div class="comment-avatar rounded-circle d-flex align-items-center justify-content-center fw-bold">
-                EM
+                {{ comment.user.first_name[0] }}{{ comment.user.surname[0] }}
               </div>
 
               <div>
-                <h3 class="h6 fw-bold mb-0">Emily M.</h3>
-                <span class="small text-secondary">28 August 2026</span>
+                <h3 class="h6 fw-bold mb-0">{{ comment.user.first_name }} {{ comment.user.surname }}</h3>
+                <span class="small text-secondary">{{ comment.comment_date.day }} {{ comment.comment_date.strftime('%B
+                  %Y') }}</span>
               </div>
             </div>
 
             <p class="text-secondary mb-0">
-              Went to this festival last year and loved the variety of
-              food. Really looking forward to going again!
+              {{ comment.text }}
             </p>
           </article>
+          {% else %}
+          <p class="text-secondary">No comments yet.</p>
+          {% endfor %}
 
-          <article class="comment-card bg-white rounded-4 p-4 shadow-sm">
-            <div class="d-flex align-items-center gap-3 mb-3">
-              <div class="comment-avatar rounded-circle d-flex align-items-center justify-content-center fw-bold">
-                JL
+          <div class="bg-white rounded-4 shadow-sm p-4 mt-4">
+            <h3 class="h5 fw-bold mb-3">Leave a comment</h3>
+
+            {% if current_user.is_authenticated %}
+            <form method="post" action="{{ url_for('main.comment_event', event_id=event.id) }}">
+              {{ comment_form.hidden_tag() }}
+
+              <div class="mb-3">
+                {{ comment_form.text.label(class="form-label") }}
+                {{ comment_form.text(class="form-control", rows=4, placeholder="Write your comment here...") }}
               </div>
 
-              <div>
-                <h3 class="h6 fw-bold mb-0">James L.</h3>
-                <span class="small text-secondary">29 August 2026</span>
-              </div>
-            </div>
-
+              {{ comment_form.submit(class="btn feastly-btn px-4") }}
+            </form>
+            {% else %}
             <p class="text-secondary mb-0">
-              Does anyone know if there will be plenty of vegetarian
-              options this year?
+              <a href="{{ url_for('auth.login', next=request.path) }}"> Log in</a> to leave a comment.
             </p>
-          </article>
-
-          <article class="comment-card bg-white rounded-4 p-4 shadow-sm">
-            <div class="d-flex align-items-center gap-3 mb-3">
-              <div class="comment-avatar rounded-circle d-flex align-items-center justify-content-center fw-bold">
-                SK
-              </div>
-
-              <div>
-                <h3 class="h6 fw-bold mb-0">Sophie K.</h3>
-                <span class="small text-secondary">30 August 2026</span>
-              </div>
-            </div>
-
-            <p class="text-secondary mb-0">
-              The location is perfect. South Bank in the evening should be
-              amazing.
-            </p>
-          </article>
-        </div>
-
-        <div class="bg-white rounded-4 shadow-sm p-4 mt-4">
-          <h3 class="h5 fw-bold mb-3">Leave a comment</h3>
-
-          <form>
-            <div class="mb-3">
-              <label for="comment" class="form-label">
-                Share your thoughts
-              </label>
-
-              <textarea id="comment" class="form-control" rows="4" placeholder="Write your comment here..."
-                required></textarea>
-            </div>
-
-            <button type="submit" class="btn feastly-btn px-4">
-              Post Comment
-            </button>
-          </form>
+            {% endif %}
+          </div>
         </div>
       </div>
     </div>
-  </div>
 </section>
 {% endblock content %}

@@ -1,6 +1,6 @@
 from . import db
 from datetime import datetime
-from .models import User, Event, Booking, Category
+from .models import User, Event, Booking, Category, Comment
 
 
 def get_user_by_id(user_id):
@@ -53,6 +53,26 @@ def get_events_by_status(status):
     return db.session.scalars(
         db.select(Event).where(Event.status == status)
     ).all()
+
+
+def create_comment(user_id, event_id, text):
+    event = get_event_by_id(event_id)
+
+    text = text.strip()
+
+    if not text:
+        return None, 'Comment cannot be empty'
+
+    comment = Comment(
+        user_id=user_id,
+        event_id=event.id,
+        text=text
+    )
+
+    db.session.add(comment)
+    db.session.commit()
+
+    return comment, None
 
 
 def create_booking(user_id, event_id, quantity):

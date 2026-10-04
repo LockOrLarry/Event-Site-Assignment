@@ -30,5 +30,5 @@ def login():
                 return redirect(url_for('index'))
             return redirect(nextp)
         else:
-            flash(error)
+            flash(error, 'warning')
     return render_template('user.html', form=login_form, heading='Login')

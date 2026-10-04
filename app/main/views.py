@@ -1,7 +1,7 @@
 from flask import abort, flash, render_template, redirect, url_for
 from flask_login import current_user, login_required
-from ..services import get_all_events, get_all_categories, get_featured_events, get_event_by_id, get_tickets_remaining, create_booking
-from .forms import BookingForm
+from ..services import get_all_events, get_all_categories, get_featured_events, get_event_by_id, get_tickets_remaining, create_booking, create_comment
+from .forms import BookingForm, CommentForm
 
 from . import main_bp
 
@@ -29,7 +29,8 @@ def event_detail(event_id):
         event=event,
         tickets_remaining=tickets_remaining,
         max_quantity=min(MAX_TICKETS_PER_BOOKING, tickets_remaining),
-        booking_form=BookingForm()
+        booking_form=BookingForm(),
+        comment_form=CommentForm()
     )
 
 @main_bp.route('/events/<int:event_id>/book', methods=['POST'])
@@ -54,6 +55,29 @@ def book_event(event_id):
             flash(f'Booked {booking.quantity} ticket(s) for {event.title}. Total: ${total:.2f}', 'success')
 
     return redirect(url_for('main.event_detail', event_id=event.id))
+
+@main_bp.route('/events/<int:event_id>/comment', methods=['POST'])
+@login_required
+def comment_event(event_id):
+    event = get_event_by_id(event_id)
+
+    if event is None:
+        abort(404)
+
+    form = CommentForm()
+
+    if form.validate_on_submit():
+        comment, error = create_comment(current_user.id, event.id, form.text.data)
+        if error:
+            flash(error, 'danger')
+        else:
+            flash('Comment posted successfully.', 'success')
+    else:
+        for errors in form.errors.values():
+            for error in errors:
+                flash(error, 'danger')
+
+    return redirect(url_for('main.event_detail', event_id=event.id, _anchor='comments'))
 
 @main_bp.route('/history/')
 def booking_history():

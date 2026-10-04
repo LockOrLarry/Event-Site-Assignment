@@ -26,6 +26,15 @@ with app.app_context():
         address='25 George Street, Brisbane'
     )
 
+    user3 = User(
+        first_name='Emily',
+        surname='Nguyen',
+        email='emily@example.com',
+        password_hash='dummy_hash_3',
+        phone='0434567890',
+        address='15 Edward Street, Brisbane'
+    )
+
     category1 = Category(
         name='Food Festivals',
         description='Festivals celebrating food, drinks, and culture.'
@@ -54,6 +63,7 @@ with app.app_context():
     db.session.add_all([
         user1,
         user2,
+        user3,
         category1,
         category2,
         category3,
@@ -405,20 +415,38 @@ with app.app_context():
     comment1 = Comment(
         user_id=user2.id,
         event_id=event1.id,
-        text='Looking forward to learning how to make plov!'
+        text='Went to this festival last year and loved the variety of food. Really looking forward to going again!',
+        comment_date=datetime(2026, 8, 28, 14, 30)
     )
 
     comment2 = Comment(
         user_id=user1.id,
         event_id=event2.id,
-        text='Fresh pasta sounds amazing. Excited for this event!'
+        text='Fresh pasta sounds amazing. Excited for this event!',
+        comment_date=datetime(2026, 8, 29, 10, 15)
+    )
+
+    comment3 = Comment(
+        user_id=user3.id,
+        event_id=event1.id,
+        text='Does anyone know if there will be plenty of vegetarian options this year?',
+        comment_date=datetime(2026, 8, 30, 9, 45)
+    )
+
+    comment4 = Comment(
+        user_id=user1.id,
+        event_id=event1.id,
+        text='The location is perfect. South Bank in the evening should be amazing.',
+        comment_date=datetime(2026, 8, 30, 11, 0)
     )
 
     db.session.add_all([
         booking1,
         booking2,
         comment1,
-        comment2
+        comment2,
+        comment3,
+        comment4
     ])
 
     db.session.commit()

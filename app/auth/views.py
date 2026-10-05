@@ -8,6 +8,25 @@ from .. import db
 # Create a blueprint - make sure all BPs have unique names
 from . import auth_bp
 
+@auth_bp.route('/register', methods=['GET', 'POST'])
+def register():
+    form = RegisterForm()
+    if form.validate_on_submit():
+        uname = register.user_name.data
+        pwd = register.password.data
+        email = register.email_id.data
+        user = db.session.scalar(db.select(User).where(User.name==uname))
+        if user:
+            flash('Username already exists, please try another')
+            return redirect(url_for('auth.register'))
+        pwd_hash = generate_password_hash(pwd)
+        new_user = User(name=uname, password_hash=pwd_hash, emailid=email)
+        db.session.add(new_user)
+        db.session.commit()
+        return redirect(url_for('auth.login'))
+    else:
+        return render_template('user.html', form=form)
+
 # this is a hint for a login function
 @auth_bp.route('/login', methods=['GET', 'POST'])
 # view function
@@ -32,3 +51,9 @@ def login():
         else:
             flash(error, 'warning')
     return render_template('user.html', form=login_form, heading='Login')
+
+@auth_bp.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('main.index'))

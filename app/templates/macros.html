@@ -1,11 +1,9 @@
-{% macro status_badge(status, classes='') %}
-{%- set colours = {
-'Open': 'success',
-'Sold Out': 'danger',
-'Inactive': 'secondary',
-'Cancelled': 'dark'
-} -%}
-<span class="badge rounded-pill text-bg-{{ colours.get(status, 'secondary') }} {{ classes }}">
-    {{ status | upper }}
+{% macro status_badge(status, classes='') %} {%- set colours = { 'Open':
+'success', 'Sold Out': 'danger', 'Inactive': 'secondary', 'Cancelled': 'dark',
+'Completed': 'secondary' } -%}
+<span
+  class="badge rounded-pill text-bg-{{ colours.get(status, 'secondary') }} {{ classes }}"
+>
+  {{ status | upper }}
 </span>
 {%- endmacro %}

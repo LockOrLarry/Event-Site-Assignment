@@ -20,9 +20,14 @@ def get_all_categories():
 
 
 def get_featured_events(limit=4):
+    now = datetime.now()
+
     return db.session.scalars(
         db.select(Event)
-        .where(Event.status == 'Open')
+        .where(
+            Event.status == 'Open',
+            Event.event_date > now
+        )
         .order_by(Event.event_date)
         .limit(limit)
     ).all()
@@ -30,6 +35,18 @@ def get_featured_events(limit=4):
 
 def get_event_by_id(event_id):
     return db.session.get(Event, event_id)
+
+
+def get_effective_event_status(event):
+    event_end = datetime.combine(
+        event.event_date.date(),
+        event.end_time
+    )
+
+    if event_end <= datetime.now():
+        return 'Completed'
+
+    return event.status
 
 
 def get_tickets_sold(event):
@@ -89,7 +106,7 @@ def create_booking(user_id, event_id, quantity):
     if quantity < 1:
         return None, 'Booking quantity must be at least 1'
 
-    if event.status != 'Open':
+    if get_effective_event_status(event) != 'Open':
         return None, 'This event is not available for booking'
 
     tickets_remaining = get_tickets_remaining(event)
@@ -120,3 +137,62 @@ def get_bookings_by_user(user_id):
         .where(Booking.user_id == user_id)
         .order_by(Booking.booking_date.desc())
     ).all()
+
+def create_event(
+    creator_id,
+    form,
+    image_path
+):
+    event_datetime = datetime.combine(
+        form.event_date.data,
+        form.start_time.data
+    )
+
+    location = (
+        f"{form.address.data}, "
+        f"{form.suburb.data}, "
+        f"{form.state.data} "
+        f"{form.postcode.data}"
+    )
+
+    acknowledgement_type = form.acknowledgement_type.data
+
+    if acknowledgement_type == 'Generic':
+        acknowledgement_text = (
+            'We acknowledge the Traditional Custodians of the land '
+            'on which this event takes place and pay our respects '
+            'to Elders past and present.'
+        )
+    elif acknowledgement_type == 'Enhanced':
+        acknowledgement_text = form.acknowledgement_text.data.strip()
+    else:
+        acknowledgement_text = None
+
+    event = Event(
+        creator_id=creator_id,
+        category_id=form.category_id.data,
+        title=form.title.data.strip(),
+        description=form.description.data.strip(),
+        event_date=event_datetime,
+        end_time=form.end_time.data,
+        location=location,
+        venue_name=form.venue_name.data.strip(),
+        address=form.address.data.strip(),
+        suburb=form.suburb.data.strip(),
+        state=form.state.data,
+        postcode=form.postcode.data.strip(),
+        price=form.price.data,
+        capacity=form.capacity.data,
+        image_path=image_path,
+        age_suitability=form.age_suitability.data,
+        dietary_options=form.dietary_options.data,
+        additional_details=form.additional_details.data,
+        status='Open',
+        acknowledgement_type=acknowledgement_type,
+        acknowledgement_text=acknowledgement_text
+    )
+
+    db.session.add(event)
+    db.session.commit()
+
+    return event

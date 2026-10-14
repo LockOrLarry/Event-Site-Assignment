@@ -70,12 +70,33 @@ class Event(db.Model):
     title = db.Column(db.String(150), nullable=False)
     description = db.Column(db.Text, nullable=False)
     event_date = db.Column(db.DateTime, nullable=False)
+    end_time = db.Column(db.Time, nullable=False)
     location = db.Column(db.String(255), nullable=False)
+
+    venue_name = db.Column(db.String(100), nullable=False)
+    address = db.Column(db.String(150), nullable=False)
+    suburb = db.Column(db.String(100), nullable=False)
+    state = db.Column(db.String(3), nullable=False)
+    postcode = db.Column(db.String(4), nullable=False)
 
     price = db.Column(db.Numeric(10, 2), nullable=False)
     capacity = db.Column(db.Integer, nullable=False)
 
     image_path = db.Column(db.String(255), nullable=False)
+
+    age_suitability = db.Column(
+        db.String(20),
+        nullable=False,
+        default='All Ages'
+    )
+
+    dietary_options = db.Column(
+        db.String(50),
+        nullable=False,
+        default='Multiple dietary options'
+    )
+
+    additional_details = db.Column(db.Text, nullable=True)
 
     status = db.Column(
         db.String(20),

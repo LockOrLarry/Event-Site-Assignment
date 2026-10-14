@@ -8,17 +8,27 @@ from ..services import (
     get_tickets_remaining,
     create_booking,
     create_comment,
-    get_bookings_by_user
+    get_bookings_by_user,
+    get_effective_event_status,
+    create_event as save_event
 )
-from .forms import BookingForm, CommentForm
+from .forms import BookingForm, CommentForm, EventCreationForm
 from . import main_bp
+from .. import db
+from ..models import Category
+from pathlib import Path
+from uuid import uuid4
+from werkzeug.utils import secure_filename
+from flask import current_app
+from sqlalchemy.exc import SQLAlchemyError
 
 @main_bp.route('/')
 def index():
     return render_template(
         'index.html',
         categories=get_all_categories(),
-        featured=get_featured_events()
+        featured=get_featured_events(),
+        get_effective_event_status=get_effective_event_status
     )
 
 MAX_TICKETS_PER_BOOKING = 5
@@ -38,7 +48,8 @@ def event_detail(event_id):
         tickets_remaining=tickets_remaining,
         max_quantity=min(MAX_TICKETS_PER_BOOKING, tickets_remaining),
         booking_form=BookingForm(),
-        comment_form=CommentForm()
+        comment_form=CommentForm(),
+        effective_status=get_effective_event_status(event)
     )
 
 @main_bp.route('/events/<int:event_id>/book', methods=['POST'])
@@ -97,8 +108,79 @@ def booking_history():
         bookings=bookings
     )
 
-@main_bp.route('/create/')
+@main_bp.route('/create/', methods=['GET', 'POST'])
+@login_required
 def create_event():
-    return render_template('create-event.html')
+    form = EventCreationForm()
+
+    categories = db.session.scalars(
+        db.select(Category).order_by(Category.name)
+    ).all()
+
+    form.category_id.choices = [
+        (category.id, category.name)
+        for category in categories
+    ]
+
+    if form.validate_on_submit():
+        image = form.image.data
+
+        filename = secure_filename(image.filename)
+        extension = Path(filename).suffix.lower()
+
+        unique_filename = f"{uuid4().hex}{extension}"
+
+        upload_folder = Path(
+            current_app.config['EVENT_UPLOAD_FOLDER']
+        )
+        upload_folder.mkdir(parents=True, exist_ok=True)
+
+        saved_file = upload_folder / unique_filename
+
+        try:
+            image.save(saved_file)
+
+            image_path = f"img/events/{unique_filename}"
+
+            event = save_event(
+                creator_id=current_user.id,
+                form=form,
+                image_path=image_path
+            )
+
+        except (OSError, SQLAlchemyError):
+            db.session.rollback()
+
+            if saved_file.exists():
+                saved_file.unlink()
+
+            current_app.logger.exception(
+                'Failed to create event'
+            )
+
+            flash(
+                'Something went wrong while creating your event.',
+                'danger'
+            )
+
+        else:
+            flash(
+                'Your event has been created successfully!',
+                'success'
+            )
+
+            return redirect(
+                url_for('main.event_detail', event_id=event.id)
+            )
+
+    elif form.is_submitted():
+        for field_errors in form.errors.values():
+            for error in field_errors:
+                flash(error, 'danger')
+
+    return render_template(
+        'create-event.html',
+        form=form
+    )
 
     

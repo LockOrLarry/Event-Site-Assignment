@@ -19,7 +19,7 @@
           <img src="{{ url_for('static', filename=event.image_path) }}" alt="{{ event.title }}"
             class="event-details-image w-100 h-100 object-fit-cover rounded-4" />
 
-          {{ status_badge(event.status, 'position-absolute top-0 start-0 m-3') }}
+          {{ status_badge(effective_status, 'position-absolute top-0 start-0 m-3') }}
         </div>
       </div>
 
@@ -60,7 +60,11 @@
 
               <div>
                 <strong class="d-block">Time</strong>
-                <span class="text-secondary">{{ event.event_date.strftime('%I:%M %p').lstrip('0') }}</span>
+                <span class="text-secondary">
+                  {{ event.event_date.strftime('%I:%M %p').lstrip('0') }}
+                  -
+                  {{ event.end_time.strftime('%I:%M %p').lstrip('0') }}
+                </span>
               </div>
             </div>
 
@@ -136,10 +140,9 @@
                   </span>
 
                   <div>
-                    <strong class="d-block mb-1">30+ Food Vendors</strong>
-
+                    <strong class="d-block mb-1">Venue</strong>
                     <span class="text-secondary small">
-                      Local favourites and international flavours.
+                        {{ event.venue_name }}
                     </span>
                   </div>
                 </div>
@@ -159,10 +162,9 @@
                   </span>
 
                   <div>
-                    <strong class="d-block mb-1">Live Entertainment</strong>
-
+                    <strong class="d-block mb-1">Additional Details</strong>
                     <span class="text-secondary small">
-                      Music and performances throughout the evening.
+                      {{ event.additional_details or 'No additional details provided.' }}
                     </span>
                   </div>
                 </div>
@@ -182,9 +184,8 @@
 
                   <div>
                     <strong class="d-block mb-1">Dietary Options</strong>
-
                     <span class="text-secondary small">
-                      Vegetarian, vegan and gluten-free options available.
+                      {{ event.dietary_options }}
                     </span>
                   </div>
                 </div>
@@ -205,10 +206,9 @@
                   </span>
 
                   <div>
-                    <strong class="d-block mb-1">All Ages</strong>
-
+                    <strong class="d-block mb-1">Age Suitability</strong>
                     <span class="text-secondary small">
-                      A family-friendly food festival.
+                      {{ event.age_suitability }}
                     </span>
                   </div>
                 </div>
@@ -219,65 +219,58 @@
       </div>
 
       <div class="col-lg-5 align-self-start sticky-lg-top" style="top: 2rem;">
-        <div class="booking-card bg-white rounded-4 shadow-sm p-4">
-          <div>
-            <div class="d-flex justify-content-between align-items-start mb-4">
+      <div class="booking-card bg-white rounded-4 shadow-sm p-4">
+        <div>
+          <div class="d-flex justify-content-between align-items-start mb-4">
+            <div>
+              <span class="text-secondary small">Ticket price</span>
+
               <div>
-                <span class="text-secondary small">Ticket price</span>
-
-                <div>
-                  <span class="fs-3 fw-bold">${{ '%.0f' % event.price }}</span>
-                  <span class="text-secondary">/ person</span>
-                </div>
+                <span class="fs-3 fw-bold">${{ '%.0f' % event.price }}</span>
+                <span class="text-secondary">/ person</span>
               </div>
-
-              {{ status_badge(event.status) }}
             </div>
 
-            {% if event.status == 'Open' %}
+            {{ status_badge(effective_status) }}
+          </div>
+
+          {% if effective_status == 'Open' %}
             {% if current_user.is_authenticated %}
-            <form method="post" action="{{ url_for('main.book_event', event_id=event.id) }}">
-              {{ booking_form.hidden_tag() }}
-              <!-- <div class="mb-3">
-                <label for="ticket-type" class="form-label fw-medium">
-                  Ticket type
-                </label>
+              <form method="post" action="{{ url_for('main.book_event', event_id=event.id) }}">
+                {{ booking_form.hidden_tag() }}
 
-                <select id="ticket-type" class="form-select">
-                  <option selected>General Admission - ${{ '%.0f' % event.price }}</option>
-                  <option>Premium Admission - $45</option>
-                </select>
-              </div> -->
+                <div class="mb-4">
+                  {{ booking_form.quantity.label(class="form-label fw-medium") }}
+                  {{ booking_form.quantity(class="form-select", min=1, max=max_quantity) }}
+                </div>
 
-              <div class="mb-4">
-                {{ booking_form.quantity.label(class="form-label fw-medium") }}
-                {{ booking_form.quantity(class="form-select", min=1, max=max_quantity) }}
-              </div>
-
-              {{ booking_form.submit(class="btn feastly-btn w-100 py-3 fw-bold") }}
-            </form>
+                {{ booking_form.submit(class="btn feastly-btn w-100 py-3 fw-bold") }}
+              </form>
             {% else %}
-            <a href="{{ url_for('auth.login', next=request.path) }}" class="btn feastly-btn w-100 py-3 fw-bold">
-              Log in to book
-            </a>
+              <a href="{{ url_for('auth.login', next=request.path) }}" class="btn feastly-btn w-100 py-3 fw-bold">
+                Log in to book
+              </a>
             {% endif %}
+
             <p class="small text-secondary text-center mt-3 mb-0">
               {{ tickets_remaining }} of {{ event.capacity }} tickets remaining.
             </p>
-            {% else %}
+          {% else %}
             <p class="text-secondary text-center mb-0">
-              {% if event.status == 'Cancelled' %}
-              This event has been cancelled.
-              {% elif event.status == 'Inactive' %}
-              Bookings are closed for this event.
-              {% else %}
-              This event is sold out.
+              {% if effective_status == 'Completed' %}
+                This event has already ended.
+              {% elif effective_status == 'Cancelled' %}
+                This event has been cancelled.
+              {% elif effective_status == 'Inactive' %}
+                Bookings are closed for this event.
+              {% elif effective_status == 'Sold Out' %}
+                This event is sold out.
               {% endif %}
             </p>
-            {% endif %}
-          </div>
+          {% endif %}
         </div>
       </div>
+    </div>
     </div>
   </div>
 </section>

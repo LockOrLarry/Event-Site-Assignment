@@ -285,8 +285,8 @@ Experiences': 'Special Occasions', 'Cooking Workshops': 'Learn & Create',
               class="event-image card-img-top"
             />
 
-            {{ status_badge(event.status, 'position-absolute top-0 end-0 m-3')
-            }}
+            {{ status_badge(get_effective_event_status(event),
+            'position-absolute top-0 end-0 m-3') }}
           </div>
 
           <div class="card-body d-flex flex-column p-4">

@@ -13,7 +13,10 @@
       crossorigin="anonymous"
     />
 
-    <link rel="stylesheet" href="../static/style/style.css" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style/style.css') }}"
+    />
   </head>
 
   <body>
@@ -22,7 +25,7 @@
         class="container-xl d-flex align-items-center justify-content-between"
       >
         <a
-          href="index.html"
+          href="{{ url_for('main.index') }}"
           class="d-flex align-items-center gap-2 text-decoration-none"
         >
           <span
@@ -51,21 +54,21 @@
 
         <div class="d-none d-md-flex align-items-center gap-4">
           <a
-            href="index.html#categories"
+            href="{{ url_for('main.index') }}#categories"
             class="navbar-link fw-medium text-decoration-none"
           >
             Explore
           </a>
 
           <a
-            href="create-event.html"
+            href="{{ url_for('main.create_event') }}"
             class="navbar-link fw-medium text-decoration-none"
           >
             Create Event
           </a>
 
           <a
-            href="booking-history.html"
+            href="{{ url_for('main.booking_history') }}"
             class="navbar-link fw-medium text-decoration-none"
           >
             My Bookings
@@ -132,21 +135,21 @@
           class="container-xl d-flex flex-column align-items-center gap-3 pt-3 pb-2"
         >
           <a
-            href="index.html#categories"
+            href="{{ url_for('main.index') }}#categories"
             class="navbar-link fw-medium text-decoration-none"
           >
             Explore
           </a>
 
           <a
-            href="create-event.html"
+            href="{{ url_for('main.create_event') }}"
             class="navbar-link fw-medium text-decoration-none"
           >
             Create Event
           </a>
 
           <a
-            href="booking-history.html"
+            href="{{ url_for('main.booking_history') }}"
             class="navbar-link fw-medium text-decoration-none"
           >
             My Bookings
@@ -176,14 +179,15 @@
       <section class="pb-5">
         <div class="container-xl">
           <div class="row g-4">
+            {% for booking in bookings %}
             <div class="col-md-6 col-xl-4">
               <article
                 class="booking-card-grid bg-white rounded-4 shadow-sm overflow-hidden h-100"
               >
                 <div class="position-relative">
                   <img
-                    src="static/img/Night-Feast.webp"
-                    alt="Brisbane Street Food Festival"
+                    src="{{ url_for('static', filename=booking.event.image_path) }}"
+                    alt="{{ booking.event.title }}"
                     class="booking-card-image w-100 object-fit-cover"
                   />
 
@@ -195,38 +199,47 @@
                 </div>
 
                 <div class="p-4">
-                  <span class="featured-category">Food Festival</span>
+                  <span class="featured-category">
+                    {{ booking.event.category.name }}
+                  </span>
 
                   <h2 class="h5 fw-bold mt-2 mb-2">
-                    Brisbane Street Food Festival
+                    {{ booking.event.title }}
                   </h2>
 
                   <div
                     class="d-flex flex-column gap-2 text-secondary small mb-4"
                   >
-                    <span>12 September 2026</span>
-                    <span>South Bank</span>
+                    <span
+                      >{{ booking.event.event_date.strftime('%d %B %Y') }}</span
+                    >
+                    <span>{{ booking.event.location }}</span>
                   </div>
 
                   <div class="booking-details-grid border-top pt-3">
                     <div>
                       <span class="booking-detail-label">Booking ID</span>
-                      <strong class="d-block mt-1">#FST-82641</strong>
+                      <strong class="d-block mt-1">#{{ booking.id }}</strong>
                     </div>
 
                     <div>
                       <span class="booking-detail-label">Booked on</span>
-                      <strong class="d-block mt-1">31 Aug 2026</strong>
+                      <strong class="d-block mt-1">
+                        {{ booking.booking_date.strftime('%d %b %Y') }}
+                      </strong>
                     </div>
 
                     <div>
-                      <span class="booking-detail-label">Time</span>
-                      <strong class="d-block mt-1">10:42 AM</strong>
+                      <span class="booking-detail-label">Tickets / Total</span>
+                      <strong class="d-block mt-1">
+                        {{ booking.quantity }} / ${{
+                        '%.2f'|format(booking.quantity * booking.price) }}
+                      </strong>
                     </div>
                   </div>
 
                   <a
-                    href="event-details.html"
+                    href="{{ url_for('main.event_detail', event_id=booking.event.id) }}"
                     class="btn feastly-btn w-100 mt-4"
                   >
                     View Event
@@ -234,297 +247,18 @@
                 </div>
               </article>
             </div>
-
-            <div class="col-md-6 col-xl-4">
-              <article
-                class="booking-card-grid bg-white rounded-4 shadow-sm overflow-hidden h-100"
+            {% else %}
+            <div class="col-12 text-center py-5">
+              <h2 class="h4 fw-bold">No bookings yet</h2>
+              <p class="text-secondary">Your booked events will appear here.</p>
+              <a
+                href="{{ url_for('main.index') }}"
+                class="btn feastly-btn mt-3"
               >
-                <div class="position-relative">
-                  <img
-                    src="static/img/Handmade Pasta Workshop.webp"
-                    alt="Handmade Pasta Workshop"
-                    class="booking-card-image w-100 object-fit-cover"
-                  />
-
-                  <span
-                    class="booking-status booking-status--confirmed position-absolute top-0 end-0 m-3"
-                  >
-                    CONFIRMED
-                  </span>
-                </div>
-
-                <div class="p-4">
-                  <span class="featured-category">Cooking Workshop</span>
-
-                  <h2 class="h5 fw-bold mt-2 mb-2">Handmade Pasta Workshop</h2>
-
-                  <div
-                    class="d-flex flex-column gap-2 text-secondary small mb-4"
-                  >
-                    <span>20 September 2026</span>
-                    <span>West End</span>
-                  </div>
-
-                  <div class="booking-details-grid border-top pt-3">
-                    <div>
-                      <span class="booking-detail-label">Booking ID</span>
-                      <strong class="d-block mt-1">#FST-71429</strong>
-                    </div>
-
-                    <div>
-                      <span class="booking-detail-label">Booked on</span>
-                      <strong class="d-block mt-1">27 Aug 2026</strong>
-                    </div>
-
-                    <div>
-                      <span class="booking-detail-label">Time</span>
-                      <strong class="d-block mt-1">6:18 PM</strong>
-                    </div>
-                  </div>
-
-                  <a
-                    href="event-details.html"
-                    class="btn feastly-btn w-100 mt-4"
-                  >
-                    View Event
-                  </a>
-                </div>
-              </article>
+                Explore Events
+              </a>
             </div>
-
-            <div class="col-md-6 col-xl-4">
-              <article
-                class="booking-card-grid bg-white rounded-4 shadow-sm overflow-hidden h-100"
-              >
-                <div class="position-relative">
-                  <img
-                    src="static/img/Artisan Chocolate Tasting.webp"
-                    alt="Artisan Chocolate Tasting"
-                    class="booking-card-image w-100 object-fit-cover"
-                  />
-
-                  <span
-                    class="booking-status booking-status--confirmed position-absolute top-0 end-0 m-3"
-                  >
-                    CONFIRMED
-                  </span>
-                </div>
-
-                <div class="p-4">
-                  <span class="featured-category">Tasting</span>
-
-                  <h2 class="h5 fw-bold mt-2 mb-2">
-                    Artisan Chocolate Tasting
-                  </h2>
-
-                  <div
-                    class="d-flex flex-column gap-2 text-secondary small mb-4"
-                  >
-                    <span>25 September 2026</span>
-                    <span>New Farm</span>
-                  </div>
-
-                  <div class="booking-details-grid border-top pt-3">
-                    <div>
-                      <span class="booking-detail-label">Booking ID</span>
-                      <strong class="d-block mt-1">#FST-56382</strong>
-                    </div>
-
-                    <div>
-                      <span class="booking-detail-label">Booked on</span>
-                      <strong class="d-block mt-1">22 Aug 2026</strong>
-                    </div>
-
-                    <div>
-                      <span class="booking-detail-label">Time</span>
-                      <strong class="d-block mt-1">2:07 PM</strong>
-                    </div>
-                  </div>
-
-                  <a
-                    href="event-details.html"
-                    class="btn feastly-btn w-100 mt-4"
-                  >
-                    View Event
-                  </a>
-                </div>
-              </article>
-            </div>
-
-            <div class="col-md-6 col-xl-4">
-              <article
-                class="booking-card-grid bg-white rounded-4 shadow-sm overflow-hidden h-100"
-              >
-                <div class="position-relative">
-                  <img
-                    src="static/img/Australian Wine Discovery.webp"
-                    alt="Australian Wine Discovery"
-                    class="booking-card-image w-100 object-fit-cover"
-                  />
-
-                  <span
-                    class="booking-status booking-status--confirmed position-absolute top-0 end-0 m-3"
-                  >
-                    CONFIRMED
-                  </span>
-                </div>
-
-                <div class="p-4">
-                  <span class="featured-category">Tasting</span>
-
-                  <h2 class="h5 fw-bold mt-2 mb-2">
-                    Australian Wine Discovery
-                  </h2>
-
-                  <div
-                    class="d-flex flex-column gap-2 text-secondary small mb-4"
-                  >
-                    <span>1 October 2026</span>
-                    <span>Brisbane CBD</span>
-                  </div>
-
-                  <div class="booking-details-grid border-top pt-3">
-                    <div>
-                      <span class="booking-detail-label">Booking ID</span>
-                      <strong class="d-block mt-1">#FST-30954</strong>
-                    </div>
-
-                    <div>
-                      <span class="booking-detail-label">Booked on</span>
-                      <strong class="d-block mt-1">11 Aug 2026</strong>
-                    </div>
-
-                    <div>
-                      <span class="booking-detail-label">Time</span>
-                      <strong class="d-block mt-1">4:51 PM</strong>
-                    </div>
-                  </div>
-
-                  <a
-                    href="event-details.html"
-                    class="btn feastly-btn w-100 mt-4"
-                  >
-                    View Event
-                  </a>
-                </div>
-              </article>
-            </div>
-
-            <div class="col-md-6 col-xl-4">
-              <article
-                class="booking-card-grid bg-white rounded-4 shadow-sm overflow-hidden h-100"
-              >
-                <div class="position-relative">
-                  <img
-                    src="static/img/Japanese Omakese Night.webp"
-                    alt="Japanese Omakase Night"
-                    class="booking-card-image w-100 object-fit-cover"
-                  />
-
-                  <span
-                    class="booking-status booking-status--confirmed position-absolute top-0 end-0 m-3"
-                  >
-                    CONFIRMED
-                  </span>
-                </div>
-
-                <div class="p-4">
-                  <span class="featured-category">Dining Experience</span>
-
-                  <h2 class="h5 fw-bold mt-2 mb-2">Japanese Omakase Night</h2>
-
-                  <div
-                    class="d-flex flex-column gap-2 text-secondary small mb-4"
-                  >
-                    <span>8 September 2026</span>
-                    <span>Brisbane CBD</span>
-                  </div>
-
-                  <div class="booking-details-grid border-top pt-3">
-                    <div>
-                      <span class="booking-detail-label">Booking ID</span>
-                      <strong class="d-block mt-1">#FST-41876</strong>
-                    </div>
-
-                    <div>
-                      <span class="booking-detail-label">Booked on</span>
-                      <strong class="d-block mt-1">15 Aug 2026</strong>
-                    </div>
-
-                    <div>
-                      <span class="booking-detail-label">Time</span>
-                      <strong class="d-block mt-1">8:36 PM</strong>
-                    </div>
-                  </div>
-
-                  <a
-                    href="event-details.html"
-                    class="btn feastly-btn w-100 mt-4"
-                  >
-                    View Event
-                  </a>
-                </div>
-              </article>
-            </div>
-
-            <div class="col-md-6 col-xl-4">
-              <article
-                class="booking-card-grid bg-white rounded-4 shadow-sm overflow-hidden h-100"
-              >
-                <div class="position-relative">
-                  <img
-                    src="static/img/Moroccan Souk & Supper Night.webp"
-                    alt="Moroccan Souk and Supper Night"
-                    class="booking-card-image w-100 object-fit-cover"
-                  />
-
-                  <span
-                    class="booking-status booking-status--completed position-absolute top-0 end-0 m-3"
-                  >
-                    COMPLETED
-                  </span>
-                </div>
-
-                <div class="p-4">
-                  <span class="featured-category">Cultural Food Event</span>
-
-                  <h2 class="h5 fw-bold mt-2 mb-2">
-                    Moroccan Souk &amp; Supper Night
-                  </h2>
-
-                  <div
-                    class="d-flex flex-column gap-2 text-secondary small mb-4"
-                  >
-                    <span>27 August 2026</span>
-                    <span>Fortitude Valley</span>
-                  </div>
-
-                  <div class="booking-details-grid border-top pt-3">
-                    <div>
-                      <span class="booking-detail-label">Booking ID</span>
-                      <strong class="d-block mt-1">#FST-28571</strong>
-                    </div>
-
-                    <div>
-                      <span class="booking-detail-label">Booked on</span>
-                      <strong class="d-block mt-1">5 Aug 2026</strong>
-                    </div>
-
-                    <div>
-                      <span class="booking-detail-label">Time</span>
-                      <strong class="d-block mt-1">7:24 PM</strong>
-                    </div>
-                  </div>
-
-                  <a
-                    href="event-details.html"
-                    class="btn feastly-btn w-100 mt-4"
-                  >
-                    View Event
-                  </a>
-                </div>
-              </article>
-            </div>
+            {% endfor %}
           </div>
         </div>
       </section>
@@ -535,7 +269,7 @@
         <div class="row g-4">
           <div class="col-lg-4 col-md-6">
             <a
-              href="index.html"
+              href="{{ url_for('main.index') }}"
               class="d-inline-flex align-items-center gap-2 text-decoration-none mb-3"
             >
               <span
@@ -573,14 +307,17 @@
 
             <ul class="list-unstyled d-flex flex-column gap-2">
               <li>
-                <a href="index.html" class="footer-link text-decoration-none">
+                <a
+                  href="{{ url_for('main.index') }}"
+                  class="footer-link text-decoration-none"
+                >
                   Home
                 </a>
               </li>
 
               <li>
                 <a
-                  href="index.html#featured"
+                  href="{{ url_for('main.index') }}#featured"
                   class="footer-link text-decoration-none"
                 >
                   Featured Events
@@ -589,7 +326,7 @@
 
               <li>
                 <a
-                  href="index.html#categories"
+                  href="{{ url_for('main.index') }}#categories"
                   class="footer-link text-decoration-none"
                 >
                   Browse Categories
@@ -604,7 +341,7 @@
             <ul class="list-unstyled d-flex flex-column gap-2">
               <li>
                 <a
-                  href="index.html#food-festivals"
+                  href="{{ url_for('main.index') }}#food-festivals"
                   class="footer-link text-decoration-none"
                 >
                   Food Festivals
@@ -613,7 +350,7 @@
 
               <li>
                 <a
-                  href="index.html#dining-experiences"
+                  href="{{ url_for('main.index') }}#dining-experiences"
                   class="footer-link text-decoration-none"
                 >
                   Dining Experiences
@@ -622,7 +359,7 @@
 
               <li>
                 <a
-                  href="index.html#cooking-workshops"
+                  href="{{ url_for('main.index') }}#cooking-workshops"
                   class="footer-link text-decoration-none"
                 >
                   Cooking Workshops
@@ -631,7 +368,7 @@
 
               <li>
                 <a
-                  href="index.html#tastings"
+                  href="{{ url_for('main.index') }}#tastings"
                   class="footer-link text-decoration-none"
                 >
                   Tastings
@@ -640,7 +377,7 @@
 
               <li>
                 <a
-                  href="index.html#cultural-food-events"
+                  href="{{ url_for('main.index') }}#cultural-food-events"
                   class="footer-link text-decoration-none"
                 >
                   Cultural Food Events
@@ -655,7 +392,7 @@
             <ul class="list-unstyled d-flex flex-column gap-2">
               <li>
                 <a
-                  href="create-event.html"
+                  href="{{ url_for('main.create_event') }}"
                   class="footer-link text-decoration-none"
                 >
                   Create Event
@@ -664,7 +401,7 @@
 
               <li>
                 <a
-                  href="booking-history.html"
+                  href="{{ url_for('main.booking_history') }}"
                   class="footer-link text-decoration-none"
                 >
                   My Bookings

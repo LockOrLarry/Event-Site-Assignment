@@ -1,8 +1,16 @@
 from flask import abort, flash, render_template, redirect, url_for
 from flask_login import current_user, login_required
-from ..services import get_all_events, get_all_categories, get_featured_events, get_event_by_id, get_tickets_remaining, create_booking, create_comment
+from ..services import (
+    get_all_events,
+    get_all_categories,
+    get_featured_events,
+    get_event_by_id,
+    get_tickets_remaining,
+    create_booking,
+    create_comment,
+    get_bookings_by_user
+)
 from .forms import BookingForm, CommentForm
-
 from . import main_bp
 
 @main_bp.route('/')
@@ -80,8 +88,14 @@ def comment_event(event_id):
     return redirect(url_for('main.event_detail', event_id=event.id, _anchor='comments'))
 
 @main_bp.route('/history/')
+@login_required
 def booking_history():
-    return render_template('booking-history.html')
+    bookings = get_bookings_by_user(current_user.id)
+
+    return render_template(
+        'booking-history.html',
+        bookings=bookings
+    )
 
 @main_bp.route('/create/')
 def create_event():

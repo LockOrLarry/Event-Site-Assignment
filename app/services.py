@@ -114,4 +114,9 @@ def create_booking(user_id, event_id, quantity):
     return booking, None
     
 
-    
+def get_bookings_by_user(user_id):
+    return db.session.scalars(
+        db.select(Booking)
+        .where(Booking.user_id == user_id)
+        .order_by(Booking.booking_date.desc())
+    ).all()

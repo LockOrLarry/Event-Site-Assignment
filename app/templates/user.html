@@ -1,18 +1,60 @@
 {% extends "base.html" %} {% from "bootstrap5/form.html" import render_form %}
-{% block content %}
+{% block title %} {{ "Sign In" if heading == "Login" else "Sign Up" }} | Feastly
+{% endblock %} {% block content %}
+<section class="auth-page">
+  <div class="auth-layout">
+    <!-- Left: Feastly brand panel -->
+    <div class="auth-visual">
+      <div class="auth-visual-content">
+        <span class="auth-eyebrow">WELCOME TO FEASTLY</span>
 
-<div class="page-header">
-  <h4>{{heading}}</h4>
-</div>
+        <h1>
+          Good food.<br />
+          Great company.<br />
+          <span>Unforgettable moments.</span>
+        </h1>
 
-<!-- Form rendering is simple and easy if using WTForms and Bootstrap -->
-<div class="col-md-6">{{render_form(form)}}</div>
+        <p>
+          Discover food festivals, dining experiences, cooking workshops, and
+          more.
+        </p>
+      </div>
+    </div>
 
-<!-- When you have Login form, then show the user a link to register -->
-{% if heading == 'Login' %}
-<div class="col-md-4">
-  <p>
-    New user? <a href="{{url_for('auth.register')}}">Click here</a> to register.
-  </p>
-</div>
-{% endif %} {% endblock %}
+    <!-- Right: Authentication form -->
+    <div class="auth-form-panel">
+      <div class="auth-form-container">
+        {% if heading == 'Login' %}
+        <span class="auth-form-eyebrow">WELCOME BACK</span>
+        <h2>Sign in to Feastly</h2>
+        <p class="auth-form-description">
+          Your next delicious experience awaits.
+        </p>
+        {% else %}
+        <span class="auth-form-eyebrow">JOIN THE COMMUNITY</span>
+        <h2>Create your account</h2>
+        <p class="auth-form-description">
+          Join Feastly and start discovering unforgettable food experiences.
+        </p>
+        {% endif %}
+
+        <div class="auth-form">{{ render_form(form) }}</div>
+
+        <div class="auth-switch">
+          {% if heading == 'Login' %}
+          <p>
+            New to Feastly?
+            <a href="{{ url_for('auth.register') }}">Create an account</a>
+          </p>
+          {% else %}
+          <p>
+            Already have an account?
+            <a href="{{ url_for('auth.login') }}">Sign in</a>
+          </p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

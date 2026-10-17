@@ -1,4 +1,5 @@
-from . import db
+import json
+from . import db, encoder
 from datetime import datetime
 from .models import User, Event, Booking, Category, Comment
 
@@ -193,6 +194,17 @@ def create_event(
     )
 
     db.session.add(event)
+    db.session.flush()
+    update_event_embedding(event)
     db.session.commit()
 
     return event
+
+
+def build_embedding_text(event):
+    return f"{event.title}. {event.category.name}. {event.description}"
+
+
+def update_event_embedding(event):
+    embedding = encoder.encode(build_embedding_text(event))
+    event.description_embedding = json.dumps(embedding.tolist())

@@ -1,6 +1,7 @@
 from app import create_app, db
 from app.models import User, Category, Event, Booking, Comment
-from datetime import datetime
+from datetime import datetime, timedelta
+from app.services import update_event_embedding
 
 app = create_app()
 
@@ -373,6 +374,37 @@ with app.app_context():
         acknowledgement_text=None
     )
 
+    events = [
+        event1,
+        event2,
+        event3,
+        event4,
+        event5,
+        event6,
+        event7,
+        event8,
+        event9,
+        event10,
+        event11,
+        event12,
+        event13,
+        event14,
+        event15,
+        event16,
+        event17,
+        event18,
+        event19,
+        event20
+        ]
+
+    for event in events:
+        event.end_time = (event.event_date + timedelta(hours=3)).time()
+        event.venue_name = event.location
+        event.address = event.location
+        event.suburb = event.location
+        event.state = 'QLD'
+        event.postcode = '4000'
+
     db.session.add_all([
         event1,
         event2,
@@ -395,6 +427,11 @@ with app.app_context():
         event19,
         event20
     ])
+
+    db.session.commit()
+
+    for event in events:
+        update_event_embedding(event)
 
     db.session.commit()
 

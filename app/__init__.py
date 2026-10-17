@@ -4,6 +4,14 @@ from flask_bootstrap import Bootstrap5
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from pathlib import Path
+from sentence_transformers import SentenceTransformer
+
+try:
+    encoder = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2", local_files_only=True)
+except:
+    print("Local AI model not found. Downloading...")
+    encoder = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
+    print("Downloaded and loaded AI model")
 
 db = SQLAlchemy()
 

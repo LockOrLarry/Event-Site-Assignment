@@ -1,4 +1,6 @@
-from . import db
+import json, re
+from . import db, encoder
+from sentence_transformers import util
 from datetime import datetime
 from .models import User, Event, Booking, Category, Comment
 
@@ -193,6 +195,121 @@ def create_event(
     )
 
     db.session.add(event)
+    db.session.flush()
+    update_event_embedding(event)
     db.session.commit()
 
     return event
+
+
+def build_embedding_text(event):
+    return f"{event.title}. {event.category.name}. {event.description}"
+
+
+def update_event_embedding(event):
+    embedding = encoder.encode(build_embedding_text(event))
+    event.description_embedding = json.dumps(embedding.tolist())
+
+
+SEARCH_MIN_SCORE = 0.2
+SEARCH_RELATIVE_SCORE = 0.75
+KEYWORD_WEIGHT = 0.5
+
+STOP_WORDS = {'a', 'an', 'the', 'and', 'or', 'for', 'to', 'of', 'in', 'on', 'at', 'with', 'is', 'I', 'can', 'where', 'what', 'how', 'food', 'event'}
+
+
+def get_search_terms(query):
+    words = re.findall(r"[a-z0-9']+", query.lower())
+    return [word for word in words if word not in STOP_WORDS and len(word) > 1]
+
+
+def contains_word(text, word):
+    return re.search(r'\b' + re.escape(word), text.lower()) is not None
+
+
+def get_keyword_score(query, event):
+    terms = get_search_terms(query)
+
+    if not terms:
+        return 0.0
+
+    if query.lower().strip() in event.title.lower():
+        return 1.0
+
+    score = 0.0
+
+    for term in terms:
+        if contains_word(event.title, term):
+            score += 1.0
+        elif contains_word(event.category.name, term):
+            score += 0.6
+        elif contains_word(event.description, term):
+            score += 0.4
+
+    return score / len(terms)
+
+
+def has_title_or_category_match(query, event):
+    return any(
+        contains_word(event.title, term) or contains_word(event.category.name, term)
+        for term in get_search_terms(query)
+    )
+
+
+def search_events(query, limit=8):
+    query_embedding = encoder.encode(query)
+
+    events = db.session.scalars(
+        db.select(Event).where(Event.description_embedding.is_not(None))
+    ).all()
+
+    if not events:
+        return []
+
+    scored = []
+
+    for event in events:
+        event_embedding = json.loads(event.description_embedding)
+        ai_score = util.cos_sim(query_embedding, event_embedding).item()
+        keyword_score = get_keyword_score(query, event)
+        scored.append((ai_score, keyword_score, event))
+
+    best_ai_score = max(ai_score for ai_score, keyword_score, event in scored)
+    ai_cutoff = best_ai_score * SEARCH_RELATIVE_SCORE
+
+    results = []
+
+    for ai_score, keyword_score, event in scored:
+        relevant_events = best_ai_score >= SEARCH_MIN_SCORE and ai_score >= ai_cutoff
+
+        if relevant_events or has_title_or_category_match(query, event):
+            results.append((ai_score + KEYWORD_WEIGHT * keyword_score, event))
+
+    results.sort(key=lambda result: result[0], reverse=True)
+
+    return [event for score, event in results[:limit]]
+
+def keyword_search_events(query, limit=8):
+    terms = get_search_terms(query)
+
+    if not terms:
+        return []
+
+    statement = db.select(Event).join(Event.category)
+
+    for term in terms:
+        pattern = f"%{term}%"
+        statement = statement.where(
+            db.or_(
+                Event.title.ilike(pattern),
+                Event.description.ilike(pattern),
+                Event.location.ilike(pattern),
+                Event.venue_name.ilike(pattern),
+                Category.name.ilike(pattern)
+            )
+        )
+
+    events = db.session.scalars(statement).all()
+    events.sort(key=lambda event: get_keyword_score(query, event), reverse=True)
+
+    return events[:limit]

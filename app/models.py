@@ -69,7 +69,7 @@ class Event(db.Model):
 
     title = db.Column(db.String(150), nullable=False)
     description = db.Column(db.Text, nullable=False)
-    description_embeddingg = db.Column(db.Text, nullable=True)
+    description_embedding = db.Column(db.Text, nullable=True)
     event_date = db.Column(db.DateTime, nullable=False)
     end_time = db.Column(db.Time, nullable=False)
     location = db.Column(db.String(255), nullable=False)

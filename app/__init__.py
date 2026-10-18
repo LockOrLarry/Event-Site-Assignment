@@ -7,10 +7,10 @@ from pathlib import Path
 from sentence_transformers import SentenceTransformer
 
 try:
-    encoder = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2", local_files_only=True)
+    encoder = SentenceTransformer("sentence-transformers/multi-qa-MiniLM-L6-cos-v1", local_files_only=True)
 except:
     print("Local AI model not found. Downloading...")
-    encoder = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
+    encoder = SentenceTransformer("sentence-transformers/multi-qa-MiniLM-L6-cos-v1")
     print("Downloaded and loaded AI model")
 
 db = SQLAlchemy()

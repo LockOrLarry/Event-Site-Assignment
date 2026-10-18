@@ -1,4 +1,4 @@
-from flask import abort, flash, render_template, redirect, url_for
+from flask import abort, flash, render_template, redirect, url_for, request
 from flask_login import current_user, login_required
 from ..services import (
     get_all_events,
@@ -10,7 +10,9 @@ from ..services import (
     create_comment,
     get_bookings_by_user,
     get_effective_event_status,
-    create_event as save_event
+    create_event as save_event,
+    search_events,
+    keyword_search_events
 )
 from .forms import BookingForm, CommentForm, EventCreationForm
 from . import main_bp
@@ -183,4 +185,24 @@ def create_event():
         form=form
     )
 
-    
+@main_bp.route('/search/')
+def search():
+    query = request.args.get('q', '').strip()
+    mode = request.args.get('mode', 'smart')
+
+    if not query:
+        return redirect(url_for('main.index'))
+
+    if mode == 'keyword':
+        events = keyword_search_events(query)
+    else:
+        mode = 'smart'
+        events = search_events(query)
+
+    return render_template(
+        'search.html',
+        query=query,
+        mode=mode,
+        events=events,
+        get_effective_event_status=get_effective_event_status
+    )

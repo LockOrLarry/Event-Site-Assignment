@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% from "macros.html" import event_card %}
+
+{% block title %}Search | Feastly{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container-xl">
+        <div class="mb-4">
+            <span class="featured-category">Search results</span>
+            <h1 class="display-6 fw-bold mt-2">Results for "{{ query }}"</h1>
+            <p class="text-secondary mb-0">
+                {{ events | length}} event{{ '' if events | length == 1 else 's' }} found
+            </p>
+        </div>
+        <ul class="nav nav-pills mb-4">
+            <li class="nav-item">
+                <a class="nav-link {{ 'active' if mode == 'smart' }}"
+                    href="{{ url_for('main.search', q=query, mode='smart') }}">Smart results</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ 'active' if mode == 'keyword' }}"
+                    href="{{ url_for('main.search', q=query, mode='keyword') }}">Keyword matches</a>
+            </li>
+        </ul>
+        <div class="row g-4">
+            {% for event in events %}
+            {{ event_card(event, get_effective_event_status(event)) }}
+            {% else %}
+            <div class="col-12">
+                <p class="text-secondary">
+                    Sorry, no events matched your search.
+                </p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock content %}

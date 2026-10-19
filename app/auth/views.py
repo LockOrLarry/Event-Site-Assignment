@@ -1,9 +1,8 @@
 from flask import flash, render_template, request, url_for, redirect
-from flask_bcrypt import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user
 from ..models import User
 from .forms import LoginForm, RegisterForm
-from .. import db
+from .. import db, Bcrypt
 
 # Create a blueprint - make sure all BPs have unique names
 from . import auth_bp
@@ -20,7 +19,7 @@ def register():
             flash('Email already exists, please try another')
             return redirect(url_for('auth.register'))
         password = register_form.password.data
-        pwd_hash = generate_password_hash(password)
+        pwd_hash = Bcrypt.generate_password_hash(password).decode('utf-8')
         phone = register_form.phone.data
         address = register_form.address.data
         new_user = User(first_name=first_name, surname=surname, email=email, password_hash=pwd_hash, phone=phone, address=address)
@@ -42,7 +41,7 @@ def login():
         user = db.session.scalar(db.select(User).where(User.email==email))
         if user is None:
             error = 'Incorrect email'
-        elif not check_password_hash(user.password_hash, password): # takes the hash and cleartext password
+        elif not Bcrypt.check_password_hash(user.password_hash, password): # takes the hash and cleartext password
             error = 'Incorrect password'
         if error is None:
             login_user(user)

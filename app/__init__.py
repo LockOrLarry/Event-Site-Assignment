@@ -2,6 +2,7 @@
 from flask import Flask 
 from flask_bootstrap import Bootstrap5
 from flask_sqlalchemy import SQLAlchemy
+from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from pathlib import Path
 from sentence_transformers import SentenceTransformer
@@ -14,6 +15,7 @@ except:
     print("Downloaded and loaded AI model")
 
 db = SQLAlchemy()
+Bcrypt = Bcrypt()
 
 # create a function that creates a web application
 # a web server will run this web application
@@ -34,6 +36,7 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sitedata.sqlite'
     # initialise db with flask app
     db.init_app(app)
+    Bcrypt.init_app(app)
 
     Bootstrap5(app)
     

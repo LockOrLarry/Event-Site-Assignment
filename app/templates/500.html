@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% from "macros.html" import status_badge %}
+
+{% block title %}500 Internal Server Error | Feastly{% endblock %}
+
+{% block content %}
+<section class="booking-history-heading py-4 py-lg-5">
+    <div class="container-xl">
+        <div class="row">
+            <div class="col-lg-8">
+                <h1 class="display-5 fw-bold mt-2 mb-3">500 Internal Server Error</h1>
+
+                <a href="{{ url_for('main.index') }}">
+                    <p class="text-secondary fs-5 mb-0">Something went wrong, click here to head back to the main page!</p>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

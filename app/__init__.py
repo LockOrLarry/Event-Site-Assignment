@@ -1,5 +1,5 @@
 # import flask - from 'package' import 'Class'
-from flask import Flask 
+from flask import Flask, render_template
 from flask_bootstrap import Bootstrap5
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
@@ -60,5 +60,13 @@ def create_app():
 
     from .auth import auth_bp
     app.register_blueprint(auth_bp)
+
+    @app.errorhandler(404)
+    def not_found(e):
+        return render_template("404.html")
+
+    @app.errorhandler(500)
+    def internal_server_error(e):
+        return render_template("500.html"), 500
     
     return app

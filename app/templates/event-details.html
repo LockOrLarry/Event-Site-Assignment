@@ -78,7 +78,7 @@
               <div>
                 <strong class="d-block">Venue</strong>
                 <span class="text-secondary">
-                  {{ event.location }}
+                  {{ event.venue_name }}, {{ event.location }}
                 </span>
               </div>
             </div>
@@ -142,7 +142,7 @@
                   <div>
                     <strong class="d-block mb-1">Venue</strong>
                     <span class="text-secondary small">
-                        {{ event.venue_name }}
+                      {{ event.venue_name }}
                     </span>
                   </div>
                 </div>
@@ -219,58 +219,58 @@
       </div>
 
       <div class="col-lg-5 align-self-start sticky-lg-top" style="top: 2rem;">
-      <div class="booking-card bg-white rounded-4 shadow-sm p-4">
-        <div>
-          <div class="d-flex justify-content-between align-items-start mb-4">
-            <div>
-              <span class="text-secondary small">Ticket price</span>
-
+        <div class="booking-card bg-white rounded-4 shadow-sm p-4">
+          <div>
+            <div class="d-flex justify-content-between align-items-start mb-4">
               <div>
-                <span class="fs-3 fw-bold">${{ '%.0f' % event.price }}</span>
-                <span class="text-secondary">/ person</span>
+                <span class="text-secondary small">Ticket price</span>
+
+                <div>
+                  <span class="fs-3 fw-bold">${{ '%.0f' % event.price }}</span>
+                  <span class="text-secondary">/ person</span>
+                </div>
               </div>
+
+              {{ status_badge(effective_status) }}
             </div>
 
-            {{ status_badge(effective_status) }}
-          </div>
-
-          {% if effective_status == 'Open' %}
+            {% if effective_status == 'Open' %}
             {% if current_user.is_authenticated %}
-              <form method="post" action="{{ url_for('main.book_event', event_id=event.id) }}">
-                {{ booking_form.hidden_tag() }}
+            <form method="post" action="{{ url_for('main.book_event', event_id=event.id) }}">
+              {{ booking_form.hidden_tag() }}
 
-                <div class="mb-4">
-                  {{ booking_form.quantity.label(class="form-label fw-medium") }}
-                  {{ booking_form.quantity(class="form-select", min=1, max=max_quantity) }}
-                </div>
+              <div class="mb-4">
+                {{ booking_form.quantity.label(class="form-label fw-medium") }}
+                {{ booking_form.quantity(class="form-select", min=1, max=max_quantity) }}
+              </div>
 
-                {{ booking_form.submit(class="btn feastly-btn w-100 py-3 fw-bold") }}
-              </form>
+              {{ booking_form.submit(class="btn feastly-btn w-100 py-3 fw-bold") }}
+            </form>
             {% else %}
-              <a href="{{ url_for('auth.login', next=request.path) }}" class="btn feastly-btn w-100 py-3 fw-bold">
-                Log in to book
-              </a>
+            <a href="{{ url_for('auth.login', next=request.path) }}" class="btn feastly-btn w-100 py-3 fw-bold">
+              Log in to book
+            </a>
             {% endif %}
 
             <p class="small text-secondary text-center mt-3 mb-0">
               {{ tickets_remaining }} of {{ event.capacity }} tickets remaining.
             </p>
-          {% else %}
+            {% else %}
             <p class="text-secondary text-center mb-0">
               {% if effective_status == 'Completed' %}
-                This event has already ended.
+              This event has already ended.
               {% elif effective_status == 'Cancelled' %}
-                This event has been cancelled.
+              This event has been cancelled.
               {% elif effective_status == 'Inactive' %}
-                Bookings are closed for this event.
+              Bookings are closed for this event.
               {% elif effective_status == 'Sold Out' %}
-                This event is sold out.
+              This event is sold out.
               {% endif %}
             </p>
-          {% endif %}
+            {% endif %}
+          </div>
         </div>
       </div>
-    </div>
     </div>
   </div>
 </section>

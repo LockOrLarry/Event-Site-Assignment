@@ -195,8 +195,9 @@
   <footer class="page-footer pt-5 pb-4">
     <div class="container-xl">
       <div class="row g-4">
-        <div class="col-lg-4 col-md-6">
-          <a href="index.html" class="d-inline-flex align-items-center gap-2 text-decoration-none mb-3">
+        <div class="col-lg-3 col-md-6">
+          <a href="{{ url_for('main.index') }}"
+            class="d-inline-flex align-items-center gap-2 text-decoration-none mb-3">
             <span class="logo-icon d-flex justify-content-center align-items-center rounded-circle">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -217,82 +218,101 @@
           </p>
         </div>
 
-        <div class="col-6 col-md-3 col-lg-2">
+        <div class="col-6 col-lg-3">
           <h3 class="h6 fw-bold mb-3">Explore</h3>
 
           <ul class="list-unstyled d-flex flex-column gap-2">
             <li>
-              <a href="index.html" class="footer-link text-decoration-none">
+              <a href="{{ url_for('main.index') }}" class="footer-link text-decoration-none">
                 Home
               </a>
             </li>
 
             <li>
-              <a href="#featured" class="footer-link text-decoration-none">
+              <a href="{{ url_for('main.index') }}#featured" class="footer-link text-decoration-none">
                 Featured Events
               </a>
             </li>
 
             <li>
-              <a href="#categories" class="footer-link text-decoration-none">
+              <a href="{{ url_for('main.index') }}#categories" class="footer-link text-decoration-none">
                 Browse Categories
               </a>
             </li>
           </ul>
         </div>
 
-        <div class="col-6 col-md-3 col-lg-3">
+        <div class="col-6 col-lg-3">
           <h3 class="h6 fw-bold mb-3">Categories</h3>
 
           <ul class="list-unstyled d-flex flex-column gap-2">
             <li>
-              <a href="#food-festivals" class="footer-link text-decoration-none">
+              <a href="{{ url_for('main.index') }}#food-festivals" class="footer-link text-decoration-none">
                 Food Festivals
               </a>
             </li>
 
             <li>
-              <a href="#dining-experiences" class="footer-link text-decoration-none">
+              <a href="{{ url_for('main.index') }}#dining-experiences" class="footer-link text-decoration-none">
                 Dining Experiences
               </a>
             </li>
 
             <li>
-              <a href="#cooking-workshops" class="footer-link text-decoration-none">
+              <a href="{{ url_for('main.index') }}#cooking-workshops" class="footer-link text-decoration-none">
                 Cooking Workshops
               </a>
             </li>
 
             <li>
-              <a href="#tastings" class="footer-link text-decoration-none">
+              <a href="{{ url_for('main.index') }}#tastings" class="footer-link text-decoration-none">
                 Tastings
               </a>
             </li>
 
             <li>
-              <a href="#cultural-food-events" class="footer-link text-decoration-none">
+              <a href="{{ url_for('main.index') }}#cultural-food-events" class="footer-link text-decoration-none">
                 Cultural Food Events
               </a>
             </li>
           </ul>
         </div>
 
+
         <div class="col-md-6 col-lg-3">
+          {% if current_user.is_authenticated %}
           <h3 class="h6 fw-bold mb-3">Your Events</h3>
 
           <ul class="list-unstyled d-flex flex-column gap-2">
             <li>
-              <a href="create-event.html" class="footer-link text-decoration-none">
+              <a href="{{ url_for('main.create_event') }}" class="footer-link text-decoration-none">
                 Create Event
               </a>
             </li>
 
             <li>
-              <a href="booking-history.html" class="footer-link text-decoration-none">
+              <a href="{{ url_for('main.booking_history')}}" class="footer-link text-decoration-none">
                 My Bookings
               </a>
             </li>
           </ul>
+          {% else %}
+          <h3 class="h6 fw-bold mb-3">Account</h3>
+
+          <ul class="list-unstyled d-flex flex-column gap-2">
+            <li>
+              <a href="{{ url_for('auth.login')}}" class="footer-link text-decoration-none">
+                Sign In
+              </a>
+            </li>
+
+            <li>
+              <a href="{{ url_for('auth.register')}}" class="footer-link text-decoration-none">
+                Register
+              </a>
+            </li>
+          </ul>
+          {% endif %}
         </div>
       </div>
 

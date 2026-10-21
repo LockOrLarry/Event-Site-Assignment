@@ -9,10 +9,22 @@
         <div class="row">
             <div class="col-lg-8">
                 <h1 class="display-5 fw-bold mt-2 mb-3">500 Internal Server Error</h1>
+                <p id="redirectMessage">Redirecting to Main Page in 8 seconds...</p>>
+                <script>
+                    var seconds = 8;
+                    var url = "{{ url_for('main.index') }}";
 
-                <a href="{{ url_for('main.index') }}">
-                    <p class="text-secondary fs-5 mb-0">Something went wrong, click here to head back to the main page!</p>
-                </a>
+                    function redirect() {
+                        if (seconds <= 0) {
+                            window.location = url;
+                        } else {
+                            seconds--;
+                            document.getElementById("redirectMessage").innerHTML = "Redirecting to Main Page after " + seconds + " seconds...";
+                            setTimeout(redirect, 1000);
+                        }
+                    }
+                    window.onload = redirect;
+                </script>
             </div>
         </div>
     </div>

@@ -202,6 +202,74 @@ def create_event(
     return event
 
 
+def update_event(event, form, image_path=None):
+    tickets_sold = get_tickets_sold(event)
+
+    if form.capacity.data < tickets_sold:
+        return (
+            f'Capacity cannot be lower than the '
+            f'{tickets_sold} tickets already booked.'
+        )
+
+    event.category_id = form.category_id.data
+    event.title = form.title.data.strip()
+    event.description = form.description.data.strip()
+
+    event.event_date = datetime.combine(
+        form.event_date.data,
+        form.start_time.data
+    )
+    event.end_time = form.end_time.data
+
+    event.venue_name = form.venue_name.data.strip()
+    event.address = form.address.data.strip()
+    event.suburb = form.suburb.data.strip()
+    event.state = form.state.data
+    event.postcode = form.postcode.data.strip()
+
+    event.location = (
+        f"{event.address}, {event.suburb}, "
+        f"{event.state} {event.postcode}"
+    )
+
+    event.price = form.price.data
+    event.capacity = form.capacity.data
+
+    event.age_suitability = form.age_suitability.data
+    event.dietary_options = form.dietary_options.data
+    event.additional_details = form.additional_details.data
+
+    event.acknowledgement_type = form.acknowledgement_type.data
+
+    if event.acknowledgement_type == 'Generic':
+        event.acknowledgement_text = (
+            'We acknowledge the Traditional Custodians of the land '
+            'on which this event takes place and pay our respects '
+            'to Elders past and present.'
+        )
+    elif event.acknowledgement_type == 'Enhanced':
+        event.acknowledgement_text = (
+            form.acknowledgement_text.data.strip()
+        )
+    else:
+        event.acknowledgement_text = None
+
+    if image_path is not None:
+        event.image_path = image_path
+
+    if event.status != 'Cancelled':
+        if tickets_sold >= event.capacity:
+            event.status = 'Sold Out'
+        else:
+            event.status = 'Open'
+
+    update_event_embedding(event)
+
+    db.session.commit()
+
+    return None
+
+
 def build_embedding_text(event):
     return f"{event.title}. {event.category.name}. {event.description}"
 
@@ -313,3 +381,11 @@ def keyword_search_events(query, limit=8):
     events.sort(key=lambda event: get_keyword_score(query, event), reverse=True)
 
     return events[:limit]
+
+
+def get_events_by_creator(creator_id):
+    return db.session.scalars(
+        db.select(Event)
+        .where(Event.creator_id == creator_id)
+        .order_by(Event.event_date.desc())
+    ).all()

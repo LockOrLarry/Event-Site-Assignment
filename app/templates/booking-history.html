@@ -1,93 +1,156 @@
-{% extends "base.html" %}
-{% from "macros.html" import status_badge %}
+{% extends "base.html" %} {% from "macros.html" import status_badge %} {% block
+title %}My Bookings | Feastly{% endblock %} {% block content %}
 
-{% block title %}My Bookings | Feastly{% endblock %}
-
-{% block content %}
+<!-- Page Heading -->
 <section class="booking-history-heading py-4 py-lg-5">
   <div class="container-xl">
     <div class="row">
       <div class="col-lg-8">
-        <span class="featured-category">Your experiences</span>
+        <span class="featured-category"> Your experiences </span>
 
         <h1 class="display-5 fw-bold mt-2 mb-3">My Bookings</h1>
 
         <p class="text-secondary fs-5 mb-0">
-          View the culinary events you have booked and keep track of your
-          booking details.
+          View your booked culinary experiences and keep track of your event
+          details.
         </p>
       </div>
     </div>
   </div>
 </section>
 
+<!-- Booking History -->
 <section class="pb-5">
   <div class="container-xl">
+    {% if bookings %}
+
     <div class="row g-4">
       {% for booking in bookings %}
-      <div class="col-md-6 col-xl-4">
-        <article class="booking-card-grid bg-white rounded-4 shadow-sm overflow-hidden h-100">
-          <div class="position-relative">
-            <img src="{{ url_for('static', filename=booking.event.image_path) }}" alt="{{ booking.event.title }}"
-              class="booking-card-image w-100 object-fit-cover" />
 
-            <span class="booking-status booking-status--confirmed position-absolute top-0 end-0 m-3">
-              CONFIRMED
+      <div class="col-12 col-md-6 col-xl-4">
+        <article
+          class="booking-card-grid bg-white rounded-4 shadow-sm overflow-hidden h-100 d-flex flex-column"
+        >
+          <!-- Event Image -->
+          <div class="position-relative">
+            <img
+              src="{{ url_for('static', filename=booking.event.image_path) }}"
+              alt="Event image for {{ booking.event.title }}"
+              class="booking-card-image w-100 object-fit-cover"
+              style="height: 190px"
+              loading="lazy"
+              decoding="async"
+            />
+
+            <span
+              class="booking-status booking-status--confirmed position-absolute top-0 end-0 m-3"
+            >
+              <i class="bi bi-check-circle-fill me-1" aria-hidden="true"></i>
+              Confirmed
             </span>
           </div>
 
-          <div class="p-4">
+          <!-- Card Content -->
+          <div class="p-4 d-flex flex-column flex-grow-1">
+            <!-- Category -->
             <span class="featured-category">
               {{ booking.event.category.name }}
             </span>
 
-            <h2 class="h5 fw-bold mt-2 mb-2">
-              {{ booking.event.title }}
-            </h2>
+            <!-- Event Title -->
+            <h2 class="h5 fw-bold mt-2 mb-3">{{ booking.event.title }}</h2>
 
+            <!-- Event Information -->
             <div class="d-flex flex-column gap-2 text-secondary small mb-4">
-              <span>{{ booking.event.event_date.strftime('%d %B %Y') }}</span>
-              <span>{{ booking.event.location }}</span>
+              <div class="d-flex align-items-start gap-2">
+                <i
+                  class="bi bi-calendar-event flex-shrink-0"
+                  aria-hidden="true"
+                ></i>
+
+                <time datetime="{{ booking.event.event_date.isoformat() }}">
+                  {{ booking.event.event_date.strftime('%d %B %Y, %I:%M %p') }}
+                </time>
+              </div>
+
+              <div class="d-flex align-items-start gap-2">
+                <i class="bi bi-geo-alt flex-shrink-0" aria-hidden="true"></i>
+
+                <span> {{ booking.event.location }} </span>
+              </div>
             </div>
 
+            <!-- Booking Details -->
             <div class="booking-details-grid border-top pt-3">
               <div>
-                <span class="booking-detail-label">Booking ID</span>
-                <strong class="d-block mt-1">#{{ booking.id }}</strong>
+                <span class="booking-detail-label"> Booking ID </span>
+
+                <strong class="d-block mt-1"> #{{ booking.id }} </strong>
               </div>
 
               <div>
-                <span class="booking-detail-label">Booked on</span>
+                <span class="booking-detail-label"> Booked on </span>
+
                 <strong class="d-block mt-1">
                   {{ booking.booking_date.strftime('%d %b %Y') }}
                 </strong>
               </div>
 
               <div>
-                <span class="booking-detail-label">Tickets / Total</span>
+                <span class="booking-detail-label"> Tickets </span>
+
+                <strong class="d-block mt-1"> {{ booking.quantity }} </strong>
+              </div>
+
+              <div>
+                <span class="booking-detail-label"> Total </span>
+
                 <strong class="d-block mt-1">
-                  {{ booking.quantity }} / ${{
-                  '%.2f'|format(booking.quantity * booking.price) }}
+                  ${{ '%.2f'|format(booking.quantity * booking.price) }}
                 </strong>
               </div>
             </div>
 
-            <a href="{{ url_for('main.event_detail', event_id=booking.event.id) }}" class="btn feastly-btn w-100 mt-4">
+            <!-- View Event Button -->
+            <a
+              href="{{ url_for('main.event_detail', event_id=booking.event.id) }}"
+              class="btn feastly-btn w-100 mt-auto"
+              style="margin-top: 24px !important"
+            >
+              <i class="bi bi-eye me-2" aria-hidden="true"></i>
               View Event
             </a>
           </div>
         </article>
       </div>
-      {% else %}
-      <div class="col-12 text-center py-5">
-        <h2 class="h4 fw-bold">No bookings yet</h2>
-        <p class="text-secondary">Your booked events will appear here.</p>
-        <a href="{{ url_for('main.index') }}" class="btn feastly-btn mt-3">
-          Explore Events
-        </a>
-      </div>
+
       {% endfor %}
     </div>
+
+    {% else %}
+
+    <!-- Empty State -->
+    <div class="bg-white rounded-4 shadow-sm text-center p-4 p-md-5">
+      <i
+        class="bi bi-ticket-perforated display-3 text-secondary"
+        aria-hidden="true"
+      ></i>
+
+      <h2 class="h4 fw-bold mt-4 mb-3">No bookings yet</h2>
+
+      <p class="text-secondary mb-4">
+        You haven't booked any culinary experiences yet. Explore upcoming events
+        and discover something delicious.
+      </p>
+
+      <a href="{{ url_for('main.index') }}" class="btn feastly-btn px-4 py-3">
+        <i class="bi bi-compass me-2" aria-hidden="true"></i>
+        Explore Events
+      </a>
+    </div>
+
+    {% endif %}
   </div>
 </section>
+
 {% endblock content %}

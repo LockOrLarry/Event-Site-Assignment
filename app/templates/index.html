@@ -1,11 +1,17 @@
-{% extends "base.html" %} {% from "macros.html" import status_badge, event_card %} {% block
-content %} {% set eyebrows = { 'Food Festivals': 'Discover & Taste', 'Dining
-Experiences': 'Special Occasions', 'Cooking Workshops': 'Learn & Create',
-'Tastings': 'Sip & Sample', 'Cultural Food Events': 'Taste the World' } %}
+{% extends "base.html" %} {% from "macros.html" import event_card %} {% block
+title %}Discover Culinary Experiences | Feastly{% endblock %} {% block
+meta_description %} Discover food festivals, dining experiences, cooking
+workshops, tastings and cultural food events around Brisbane with Feastly. {%
+endblock %} {% block content %} {% set eyebrows = { 'Food Festivals': 'Discover
+& Taste', 'Dining Experiences': 'Special Occasions', 'Cooking Workshops': 'Learn
+& Create', 'Tastings': 'Sip & Sample', 'Cultural Food Events': 'Taste the World'
+} %}
 
+<!-- HERO SECTION -->
 <section class="hero-section py-5">
   <div class="container-xl">
     <div class="row align-items-center g-5 position-relative">
+      <!-- Hero Content -->
       <div class="col-lg-6">
         <div class="d-flex flex-column gap-4">
           <p class="hero-eyebrow fw-semibold mb-0">
@@ -25,50 +31,93 @@ Experiences': 'Special Occasions', 'Cooking Workshops': 'Learn & Create',
           </p>
 
           <div>
-            <a href="#categories" class="hero-button btn rounded-pill px-4 py-2">
+            <a
+              href="#categories"
+              class="hero-button btn rounded-pill px-4 py-2"
+            >
               Explore Events
+              <i class="bi bi-arrow-right ms-2" aria-hidden="true"></i>
             </a>
           </div>
 
-          <div class="hero-stats d-flex flex-wrap align-items-center gap-4 gap-md-5 mt-2">
+          <!-- Dynamic Homepage Statistics -->
+          {% set stats = namespace(total=0) %} {% for category in categories %}
+          {% set stats.total = stats.total + category.events|length %} {% endfor
+          %}
+
+          <div
+            class="hero-stats d-flex flex-wrap align-items-center gap-4 gap-md-5 mt-2"
+          >
             <div class="text-center">
-              <strong class="d-block fs-4">20+</strong>
-              <span class="text-secondary">Experiences</span>
+              <strong class="d-block fs-4"> {{ stats.total }} </strong>
+              <span class="text-secondary"> Experiences </span>
             </div>
 
             <div class="text-center">
-              <strong class="d-block fs-4">5</strong>
-              <span class="text-secondary">Categories</span>
+              <strong class="d-block fs-4"> {{ categories|length }} </strong>
+              <span class="text-secondary"> Categories </span>
             </div>
 
             <div class="text-center">
-              <strong class="d-block fs-4">Brisbane</strong>
-              <span class="text-secondary">Local Events</span>
+              <strong class="d-block fs-4"> Brisbane </strong>
+              <span class="text-secondary"> Local Events </span>
             </div>
           </div>
         </div>
       </div>
 
+      <!-- Hero Gallery -->
       <div class="col-lg-6">
         <div class="hero-gallery-wrapper">
           <div class="hero-gallery">
-            <img src="{{ url_for('static', filename='img/hero-image.webp') }}" alt="Brisbane culinary event"
-              class="hero-gallery__image" />
+            <img
+              src="{{ url_for('static', filename='img/hero-image.webp') }}"
+              alt="Brisbane culinary event"
+              class="hero-gallery__image"
+              loading="eager"
+              fetchpriority="high"
+              decoding="async"
+            />
 
-            <img src="{{ url_for('static', filename='img/food-party.webp') }}" alt="Guests enjoying a food event"
-              class="hero-gallery__image" />
+            <img
+              src="{{ url_for('static', filename='img/food-party.webp') }}"
+              alt="Guests enjoying a food event"
+              class="hero-gallery__image"
+              loading="eager"
+              decoding="async"
+            />
 
-            <img src="{{ url_for('static', filename='img/cooking-workshop.webp') }}" alt="Cooking workshop"
-              class="hero-gallery__image" />
+            <img
+              src="{{ url_for('static', filename='img/cooking-workshop.webp') }}"
+              alt="Cooking workshop"
+              class="hero-gallery__image"
+              loading="eager"
+              decoding="async"
+            />
 
-            <img src="{{ url_for('static', filename='img/dining-experience.webp') }}" alt="Dining experience"
-              class="hero-gallery__image" />
+            <img
+              src="{{ url_for('static', filename='img/dining-experience.webp') }}"
+              alt="Dining experience"
+              class="hero-gallery__image"
+              loading="eager"
+              decoding="async"
+            />
 
-            <img src="{{ url_for('static', filename='img/cooking.webp') }}" alt="Chef preparing food"
-              class="hero-gallery__image hero-gallery__image--blurred" />
+            <img
+              src="{{ url_for('static', filename='img/cooking.webp') }}"
+              alt="Chef preparing food"
+              class="hero-gallery__image hero-gallery__image--blurred"
+              loading="lazy"
+              decoding="async"
+            />
 
-            <img src="{{ url_for('static', filename='img/food-party 2.webp') }}" alt="Food festival"
-              class="hero-gallery__image hero-gallery__image--blurred" />
+            <img
+              src="{{ url_for('static', filename='img/food-party 2.webp') }}"
+              alt="Food festival"
+              class="hero-gallery__image hero-gallery__image--blurred"
+              loading="lazy"
+              decoding="async"
+            />
           </div>
         </div>
       </div>
@@ -76,6 +125,7 @@ Experiences': 'Special Occasions', 'Cooking Workshops': 'Learn & Create',
   </div>
 </section>
 
+<!-- CATEGORY NAVIGATION -->
 <section id="categories" class="py-4">
   <div class="container-xl">
     <div class="text-center mb-4">
@@ -90,102 +140,174 @@ Experiences': 'Special Occasions', 'Cooking Workshops': 'Learn & Create',
       </p>
     </div>
 
-    <div class="d-flex flex-wrap justify-content-center gap-3">
+    <nav
+      class="d-flex flex-wrap justify-content-center gap-3"
+      aria-label="Event categories"
+    >
       {% for category in categories %}
-      <a href="#{{ category.name | lower | replace(' ', '-') }}" class="btn btn-outline-dark rounded-pill px-4">
+
+      <a
+        href="#{{ category.name|lower|replace(' ', '-') }}"
+        class="btn btn-outline-dark rounded-pill px-4"
+      >
         {{ category.name }}
       </a>
+
       {% endfor %}
-    </div>
+    </nav>
   </div>
 </section>
 
+<!-- FEATURED EXPERIENCES -->
 <section id="featured" class="featured-section py-5">
   <div class="container-xl">
     <div class="text-center mb-5">
       <h2 class="display-6 fw-bold">Featured Experiences</h2>
 
-      <p class="lead text-secondary">
+      <p class="lead text-secondary mb-0">
         Discover some of Feastly's standout culinary experiences.
       </p>
     </div>
 
+    {% if featured %}
+
     <div class="row g-4">
       {% for event in featured %}
-      <div class="col-12 col-md-6 col-xl-3">
-        <article class="featured-card card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
-          <div class="featured-card__image position-relative">
-            <img src="{{ url_for('static', filename=event.image_path) }}" alt="{{ event.name }}" class="card-img-top" />
 
-            <span class="badge rounded-pill text-bg-success position-absolute top-0 end-0 m-3">
-              OPEN
+      <div class="col-12 col-md-6 col-xl-3">
+        <article
+          class="featured-card card h-100 border-0 shadow-sm rounded-4 overflow-hidden"
+        >
+          <!-- Featured Event Image -->
+          <div class="featured-card__image position-relative">
+            <img
+              src="{{ url_for('static', filename=event.image_path) }}"
+              alt="{{ event.title }}"
+              class="card-img-top"
+              loading="lazy"
+              decoding="async"
+            />
+
+            <span
+              class="badge rounded-pill text-bg-success position-absolute top-0 end-0 m-3"
+            >
+              Open
             </span>
           </div>
 
+          <!-- Featured Event Content -->
           <div class="card-body d-flex flex-column p-4">
-            <span class="featured-category text-uppercase fw-semibold small mb-2">
+            <span
+              class="featured-category text-uppercase fw-semibold small mb-2"
+            >
               {{ event.category.name }}
             </span>
 
             <h3 class="card-title h5 fw-bold">{{ event.title }}</h3>
 
+            <!-- Date and Location -->
             <div class="d-flex flex-wrap gap-3 text-secondary small my-3">
               <div class="d-flex align-items-center gap-2">
                 <svg class="section-icon" aria-hidden="true">
                   <use href="#icon-calendar"></use>
                 </svg>
-                <span>{{ event.event_date.day }} {{ event.event_date.strftime('%b')
-                  }}</span>
+
+                <time datetime="{{ event.event_date.isoformat() }}">
+                  {{ event.event_date.strftime('%d %b %Y') }}
+                </time>
               </div>
 
               <div class="d-flex align-items-center gap-2">
                 <svg class="section-icon" aria-hidden="true">
                   <use href="#icon-location"></use>
                 </svg>
-                <span>{{ event.location }}</span>
+
+                <span> {{ event.location }} </span>
               </div>
             </div>
 
-            <div class="d-flex justify-content-between align-items-center gap-2 border-top pt-3 mt-auto">
+            <!-- Price and Action -->
+            <div
+              class="d-flex justify-content-between align-items-center gap-2 border-top pt-3 mt-auto"
+            >
               <div class="d-flex align-items-center gap-2">
                 <svg class="section-icon" aria-hidden="true">
                   <use href="#icon-ticket"></use>
                 </svg>
-                <strong>From ${{ '%.0f' % event.price }}</strong>
+
+                <strong>
+                  {% if event.price == 0 %} Free {% else %} ${{
+                  '%.2f'|format(event.price) }} {% endif %}
+                </strong>
               </div>
 
-              <a href="{{ url_for('main.event_detail', event_id=event.id) }}" class="btn btn-dark btn-sm">
+              <a
+                href="{{ url_for('main.event_detail', event_id=event.id) }}"
+                class="btn btn-dark btn-sm"
+                aria-label="View details for {{ event.title }}"
+              >
                 View Details
               </a>
             </div>
           </div>
         </article>
       </div>
+
       {% endfor %}
     </div>
+
+    {% else %}
+
+    <div class="text-center py-5">
+      <i
+        class="bi bi-calendar-event display-4 text-secondary"
+        aria-hidden="true"
+      ></i>
+
+      <h3 class="h5 fw-bold mt-3">No featured events available</h3>
+
+      <p class="text-secondary mb-0">
+        Explore the categories below to discover culinary experiences.
+      </p>
+    </div>
+
+    {% endif %}
   </div>
 </section>
 
+<!-- EVENTS BY CATEGORY -->
 {% for category in categories %}
-<section id="{{ category.name | lower | replace(' ', '-')}}" class="py-5">
+
+<section id="{{ category.name|lower|replace(' ', '-') }}" class="py-5">
   <div class="container-xl">
+    <!-- Category Heading -->
     <div class="text-center mb-5">
       <span class="section-eyebrow d-block text-uppercase fw-bold small mb-2">
-        {{ eyebrows[category.name] }}
+        {{ eyebrows.get(category.name, 'Explore & Discover') }}
       </span>
 
       <h2 class="display-6 fw-bold">{{ category.name }}</h2>
     </div>
 
+    <!-- Category Event Cards -->
     <div class="row g-4">
-      {% for event in category.events | sort(attribute='event_date') %}
-      {{ event_card(event, get_effective_event_status(event)) }}
-      {% else %}
-      <p class="text-center text-secondary">
-        No upcoming events in this category.
-      </p>
+      {% for event in category.events|sort(attribute='event_date') %} {{
+      event_card(event, get_effective_event_status(event)) }} {% else %}
+
+      <div class="col-12 text-center py-4">
+        <i class="bi bi-calendar-x fs-1 text-secondary" aria-hidden="true"></i>
+
+        <h3 class="h5 fw-bold mt-3">No events available</h3>
+
+        <p class="text-secondary mb-0">
+          There are currently no events in this category. Check back later for
+          new experiences.
+        </p>
+      </div>
+
       {% endfor %}
     </div>
   </div>
 </section>
+
 {% endfor %} {% endblock content %}

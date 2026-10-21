@@ -148,6 +148,7 @@ class EventCreationForm(FlaskForm):
             ('Generic', 'Generic acknowledgement'),
             ('Enhanced', 'Custom acknowledgement')
         ],
+        default='None',
         validators=[InputRequired()]
     )
 
@@ -185,3 +186,16 @@ class EventCreationForm(FlaskForm):
                 )
 
     submit = SubmitField('Create Event')
+
+class EventEditForm(EventCreationForm):
+    image = FileField(
+        'Event image',
+        validators=[
+            FileAllowed(
+                ['jpg', 'jpeg', 'png', 'webp'],
+                'Images only.'
+            )
+        ]
+    )
+
+    submit = SubmitField('Save Changes')

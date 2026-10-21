@@ -1,0 +1,512 @@
+{% extends "base.html" %}
+{% from "macros.html" import status_badge %}
+
+{% block title %}Edit Event | Feastly{% endblock %}
+
+{% block content %}
+<section class="create-event-heading py-4 py-lg-5">
+  <div class="container-xl">
+    <div class="row">
+      <div class="col-lg-8">
+        <span class="featured-category">Manage your experience</span>
+
+        <h1 class="display-5 fw-bold mt-2 mb-3">Edit Event</h1>
+
+        <p class="text-secondary fs-5 mb-0">
+          Update your event information below. Your existing bookings will be preserved.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="pb-5">
+  <div class="container-xl">
+
+    <form class="event-form" method="POST" action="{{ url_for('main.edit_event', event_id=event.id) }}" enctype="multipart/form-data">
+      {{ form.hidden_tag() }}
+      <div class="row g-4 g-lg-5">
+        <div class="col-lg-8">
+          <div class="d-flex flex-column gap-4">
+            <div class="form-section bg-white rounded-4 shadow-sm p-4">
+              <div class="mb-4">
+                <span class="form-section-number">01</span>
+                <h2 class="h4 fw-bold mt-2 mb-1">Event information</h2>
+                <p class="text-secondary mb-0">
+                  Tell guests what your event is about.
+                </p>
+              </div>
+
+              <div class="mb-4">
+                <label for="event-name" class="form-label fw-medium">
+                  Event name
+                </label>
+
+                <input type="text" class="form-control {% if form.title.errors %}is-invalid{% endif %}" id="event-name" placeholder="e.g. Brisbane Street Food Festival"
+                  name="{{ form.title.name }}" value="{{ form.title.data or '' }}" maxlength="150" required />
+                  {% for error in form.title.errors %}
+                    <div class="event-field-error" role="alert">{{ error }}</div>
+                  {% endfor %}
+              </div>
+
+              <div class="row g-3 mb-4">
+                <div class="col-12">
+                  <label for="event-category" class="form-label fw-medium">
+                    Category
+                  </label>
+
+                  <select class="form-select {% if form.category_id.errors %}is-invalid{% endif %}" id="event-category"
+  name="{{ form.category_id.name }}" required>
+
+  <option value="" disabled
+    {% if not form.category_id.data %}selected{% endif %}>
+    Select a category
+  </option>
+
+  {% for value, label in form.category_id.choices %}
+  <option value="{{ value }}"
+    {% if form.category_id.data == value %}selected{% endif %}>
+    {{ label }}
+  </option>
+  {% endfor %}
+</select>
+                  {% for error in form.category_id.errors %}
+                    <div class="event-field-error" role="alert">{{ error }}</div>
+                  {% endfor %}
+                </div>
+              </div>
+
+              <div>
+                <label for="event-description" class="form-label fw-medium">
+                  Description
+                </label>
+
+                <textarea class="form-control {% if form.description.errors %}is-invalid{% endif %}" id="event-description" name="{{ form.description.name }}" rows="6"
+  placeholder="Describe the experience, atmosphere, food and what guests can expect..." required>{{ form.description.data or '' }}</textarea>
+                  {% for error in form.description.errors %}
+                    <div class="event-field-error" role="alert">{{ error }}</div>
+                  {% endfor %}
+
+                <div class="form-text">
+                  Give guests enough information to understand what makes
+                  your event special.
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section bg-white rounded-4 shadow-sm p-4">
+              <div class="mb-4">
+                <span class="form-section-number">02</span>
+                <h2 class="h4 fw-bold mt-2 mb-1">Date & time</h2>
+                <p class="text-secondary mb-0">
+                  Let guests know when your event takes place.
+                </p>
+              </div>
+
+              <div class="row g-3">
+                <div class="col-md-12">
+                  <label for="event-date" class="form-label fw-medium">
+                    Event date
+                  </label>
+
+                  <input type="date" class="form-control {% if form.event_date.errors %}is-invalid{% endif %}"
+  id="event-date"
+  name="{{ form.event_date.name }}"
+  value="{{ form.event_date.data.strftime('%Y-%m-%d') if form.event_date.data else '' }}"
+  required />
+                  {% for error in form.event_date.errors %}
+                    <div class="event-field-error" role="alert">{{ error }}</div>
+                  {% endfor %}
+                </div>
+
+                <div class="col-md-6">
+                  <label for="start-time" class="form-label fw-medium">
+                    Start time
+                  </label>
+
+                  <input type="time" class="form-control {% if form.start_time.errors %}is-invalid{% endif %}"
+  id="start-time"
+  name="{{ form.start_time.name }}"
+  value="{{ form.start_time.data.strftime('%H:%M') if form.start_time.data else '' }}"
+  required />
+                  {% for error in form.start_time.errors %}
+                    <div class="event-field-error" role="alert">{{ error }}</div>
+                  {% endfor %}
+                </div>
+
+                <div class="col-md-6">
+                  <label for="end-time" class="form-label fw-medium">
+                    End time
+                  </label>
+
+                  <input type="time" class="form-control {% if form.end_time.errors %}is-invalid{% endif %}"
+  id="end-time"
+  name="{{ form.end_time.name }}"
+  value="{{ form.end_time.data.strftime('%H:%M') if form.end_time.data else '' }}"
+  required />
+                  {% for error in form.end_time.errors %}
+                    <div class="event-field-error" role="alert">{{ error }}</div>
+                  {% endfor %}
+
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section bg-white rounded-4 shadow-sm p-4">
+              <div class="mb-4">
+                <span class="form-section-number">03</span>
+                <h2 class="h4 fw-bold mt-2 mb-1">Location</h2>
+                <p class="text-secondary mb-0">
+                  Add the venue where guests should arrive.
+                </p>
+              </div>
+
+              <div class="mb-3">
+                <label for="venue-name" class="form-label fw-medium">
+                  Venue name
+                </label>
+
+                <input type="text" class="form-control {% if form.venue_name.errors %}is-invalid{% endif %}"
+  id="venue-name"
+  name="{{ form.venue_name.name }}"
+  value="{{ form.venue_name.data or '' }}"
+  placeholder="e.g. South Bank Parklands"
+  maxlength="100" required />
+                  {% for error in form.venue_name.errors %}
+                    <div class="event-field-error" role="alert">{{ error }}</div>
+                  {% endfor %}
+              </div>
+
+              <div class="mb-3">
+                <label for="event-address" class="form-label fw-medium">
+                  Address
+                </label>
+
+                <input type="text" class="form-control {% if form.address.errors %}is-invalid{% endif %}"
+  id="event-address"
+  name="{{ form.address.name }}"
+  value="{{ form.address.data or '' }}"
+  placeholder="Street address"
+  maxlength="150" required />
+                  {% for error in form.address.errors %}
+                    <div class="event-field-error" role="alert">{{ error }}</div>
+                  {% endfor %}
+              </div>
+
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label for="event-suburb" class="form-label fw-medium">
+                    Suburb
+                  </label>
+
+                  <input type="text" class="form-control {% if form.suburb.errors %}is-invalid{% endif %}"
+  id="event-suburb"
+  name="{{ form.suburb.name }}"
+  value="{{ form.suburb.data or '' }}"
+  placeholder="e.g. South Brisbane"
+  maxlength="100" required />
+                  {% for error in form.suburb.errors %}
+                    <div class="event-field-error" role="alert">{{ error }}</div>
+                  {% endfor %}
+                </div>
+
+                <div class="col-md-3 col-6">
+                  <label for="event-state" class="form-label fw-medium">
+                    State
+                  </label>
+
+                  <select class="form-select {% if form.state.errors %}is-invalid{% endif %}" id="event-state" name="{{ form.state.name }}" required>
+                    {% for value, label in form.state.choices %}
+                    <option value="{{ value }}" {% if (form.state.data or 'QLD') == value %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                  </select>
+                  {% for error in form.state.errors %}
+                    <div class="event-field-error" role="alert">{{ error }}</div>
+                  {% endfor %}
+                </div>
+
+                <div class="col-md-3 col-6">
+                  <label for="event-postcode" class="form-label fw-medium">
+                    Postcode
+                  </label>
+
+                  <input type="text" class="form-control {% if form.postcode.errors %}is-invalid{% endif %}"
+  id="event-postcode" minlength="4" maxlength="4" pattern="[0-9]{4}"
+  name="{{ form.postcode.name }}"
+  value="{{ form.postcode.data or '' }}"
+  placeholder="4101"
+  required />
+                  {% for error in form.postcode.errors %}
+                    <div class="event-field-error" role="alert">{{ error }}</div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section bg-white rounded-4 shadow-sm p-4">
+              <div class="mb-4">
+                <span class="form-section-number">04</span>
+                <h2 class="h4 fw-bold mt-2 mb-1">Tickets</h2>
+                <p class="text-secondary mb-0">
+                  Set the ticket details for your event.
+                </p>
+              </div>
+
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label for="ticket-price" class="form-label fw-medium">
+                    Ticket price
+                  </label>
+
+                  <div class="input-group">
+                    <span class="input-group-text">$</span>
+
+                    <input type="number" class="form-control {% if form.price.errors %}is-invalid{% endif %}"
+  id="ticket-price"
+  name="{{ form.price.name }}"
+  min="0.01" step="0.01"
+  value="{{ form.price.data if form.price.data is not none else '' }}"
+  placeholder="25.00"
+  required />
+                  </div>
+                  {% for error in form.price.errors %}
+                    <div class="event-field-error" role="alert">{{ error }}</div>
+                  {% endfor %}
+                </div>
+
+                <div class="col-md-6">
+                  <label for="ticket-capacity" class="form-label fw-medium">
+                    Ticket capacity
+                  </label>
+
+                  <input type="number" class="form-control {% if form.capacity.errors %}is-invalid{% endif %}"
+  id="ticket-capacity" step="1"
+  name="{{ form.capacity.name }}"
+  min="1"
+  value="{{ form.capacity.data if form.capacity.data is not none else '' }}"
+  placeholder="e.g. 250"
+  required />
+                  {% for error in form.capacity.errors %}
+                    <div class="event-field-error" role="alert">{{ error }}</div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section bg-white rounded-4 shadow-sm p-4">
+              <div class="mb-4">
+                <span class="form-section-number">05</span>
+                <h2 class="h4 fw-bold mt-2 mb-1">
+                  Additional information
+                </h2>
+                <p class="text-secondary mb-0">
+                  Help guests know what to expect.
+                </p>
+              </div>
+
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label for="age-group" class="form-label fw-medium">
+                    Age suitability
+                  </label>
+
+                  <select class="form-select {% if form.age_suitability.errors %}is-invalid{% endif %}" id="age-group" name="{{ form.age_suitability.name }}">
+                    {% for value, label in form.age_suitability.choices %}
+                    <option value="{{ value }}" {% if (form.age_suitability.data or 'All Ages') == value %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                  </select>
+                  {% for error in form.age_suitability.errors %}
+                    <div class="event-field-error" role="alert">{{ error }}</div>
+                  {% endfor %}
+                </div>
+
+                <div class="col-md-6">
+                  <label for="dietary" class="form-label fw-medium">
+                    Dietary options
+                  </label>
+
+                  <select class="form-select {% if form.dietary_options.errors %}is-invalid{% endif %}" id="dietary" name="{{ form.dietary_options.name }}">
+                    {% for value, label in form.dietary_options.choices %}
+                    <option value="{{ value }}" {% if (form.dietary_options.data or 'Multiple dietary options') == value %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                  </select>
+                  {% for error in form.dietary_options.errors %}
+                    <div class="event-field-error" role="alert">{{ error }}</div>
+                  {% endfor %}
+                </div>
+
+                <div class="col-12">
+                  <label for="additional-details" class="form-label fw-medium">
+                    Additional details
+                  </label>
+
+                  <textarea class="form-control {% if form.additional_details.errors %}is-invalid{% endif %}" id="additional-details" name="{{ form.additional_details.name }}"
+  rows="4"
+  placeholder="Parking, accessibility, dress code, dietary information or anything else guests should know...">{{ form.additional_details.data or '' }}</textarea>
+                  {% for error in form.additional_details.errors %}
+                    <div class="event-field-error" role="alert">{{ error }}</div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+
+            <!-- Section 06: Acknowledgement of Country -->
+            <div class="form-section bg-white rounded-4 shadow-sm p-4">
+  <div class="mb-4">
+    <span class="form-section-number">06</span>
+    <h2 class="h4 fw-bold mt-2 mb-1">
+      Acknowledgement of Country
+    </h2>
+    <p class="text-secondary mb-0">
+      Choose whether to include an Acknowledgement of Country
+      for your event.
+    </p>
+  </div>
+
+  <div class="acknowledgement-options">
+    <input type="radio" class="ack-choice"
+      id="ack-none" name="{{ form.acknowledgement_type.name }}"
+      value="None"
+      {% if (form.acknowledgement_type.data or 'None') == 'None' %}checked{% endif %}>
+
+    <label for="ack-none">None</label>
+
+    <input type="radio" class="ack-choice"
+      id="ack-generic" name="{{ form.acknowledgement_type.name }}"
+      value="Generic"
+      {% if form.acknowledgement_type.data == 'Generic' %}checked{% endif %}>
+
+    <label for="ack-generic">Generic Acknowledgement</label>
+
+    <input type="radio" class="ack-choice"
+      id="ack-custom" name="{{ form.acknowledgement_type.name }}"
+      value="Enhanced"
+      {% if form.acknowledgement_type.data == 'Enhanced' %}checked{% endif %}>
+
+    <label for="ack-custom">Custom Acknowledgement</label>
+
+    {% for error in form.acknowledgement_type.errors %}
+      <div class="event-field-error ack-radio-error" role="alert">{{ error }}</div>
+    {% endfor %}
+
+    <div class="ack-generic-content mt-3 p-3 rounded-3">
+      <p class="fw-semibold mb-2">Acknowledgement preview</p>
+      <p class="mb-0">
+        We acknowledge the Traditional Custodians of the land
+        on which this event takes place and pay our respects
+        to Elders past and present.
+      </p>
+    </div>
+
+    <div class="ack-custom-content mt-3">
+      <label for="acknowledgement-text" class="form-label fw-medium">
+        Custom acknowledgement
+      </label>
+
+      <textarea class="form-control {% if form.acknowledgement_text.errors %}is-invalid{% endif %}"
+        id="acknowledgement-text"
+        name="{{ form.acknowledgement_text.name }}"
+        rows="4" maxlength="2000"
+        placeholder="Write your Acknowledgement of Country...">{{ form.acknowledgement_text.data or '' }}</textarea>
+                  {% for error in form.acknowledgement_text.errors %}
+                    <div class="event-field-error" role="alert">{{ error }}</div>
+                  {% endfor %}
+
+      <div class="form-text">
+        Enter your own acknowledgement (maximum 2,000 characters).
+      </div>
+    </div>
+  </div>
+</div>
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+          <div class="event-form-sidebar">
+            <div class="form-section bg-white rounded-4 shadow-sm p-4 mb-4">
+  <h2 class="h5 fw-bold mb-2">Event image</h2>
+
+  <p class="text-secondary small mb-4">
+    Your current image is shown below. Choose a new image only if you want to replace it.
+  </p>
+
+  <img src="{{ url_for('static', filename=event.image_path) }}" alt="Current image for {{ event.title }}" class="img-fluid rounded-3 mb-3 w-100" style="max-height: 220px; object-fit: cover;">
+
+  <div class="event-image-picker">
+
+    <input
+      type="file"
+      id="event-image"
+      name="{{ form.image.name }}"
+      class="event-image-input"
+      accept="image/png,image/jpeg,image/webp"
+    >
+
+    <label for="event-image" class="event-image-dropzone">
+      <span class="event-image-upload-icon">
+        <i class="bi bi-cloud-arrow-up"></i>
+      </span>
+
+      <strong>Replace event image (optional)</strong>
+
+      <span class="event-image-format">
+        JPG, PNG or WebP
+      </span>
+
+      <span class="event-image-browse">
+        <i class="bi bi-image me-2"></i>
+        Browse files
+      </span>
+    </label>
+
+    <div class="event-image-selected">
+      <i class="bi bi-check-circle-fill"></i>
+      <span>Image selected. Click above to change it.</span>
+    </div>
+
+  </div>
+
+  {% for error in form.image.errors %}
+    <div class="event-field-error">
+      {{ error }}
+    </div>
+  {% endfor %}
+</div>
+
+            <div class="form-section bg-white rounded-4 shadow-sm p-4">
+              <h2 class="h5 fw-bold mb-2">Ready to save?</h2>
+
+              <p class="text-secondary small mb-4">
+                Review your changes before saving the event.
+              </p>
+
+              <div class="d-flex align-items-start gap-2 p-3 rounded-3 event-form-note mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                  class="flex-shrink-0 mt-1">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <path d="M12 16v-4"></path>
+                  <path d="M12 8h.01"></path>
+                </svg>
+
+                <span class="small">
+                  Make sure the date, venue, ticket price and event status
+                  are correct.
+                </span>
+              </div>
+
+              <button type="submit" class="btn feastly-btn w-100 py-3 fw-bold">
+                Save Changes
+              </button>
+
+              <a href="{{ url_for('main.my_events') }}" class="btn btn-outline-secondary w-100 py-2 mt-2">
+                Cancel
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
+{% endblock content %}

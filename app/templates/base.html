@@ -318,6 +318,7 @@
       </div>
       {% endfor %} {% endif %} {% endwith %}
     </div>
+
     <main>{% block content %}{% endblock %}</main>
     <footer class="page-footer pt-5 pb-4">
       <div class="container-xl">
@@ -396,7 +397,7 @@
             <ul class="list-unstyled d-flex flex-column gap-2">
               <li>
                 <a
-                  href="#food-festivals"
+                  href="{{ url_for('main.index') }}#food-festivals"
                   class="footer-link text-decoration-none"
                 >
                   Food Festivals
@@ -405,7 +406,7 @@
 
               <li>
                 <a
-                  href="#dining-experiences"
+                  href="{{ url_for('main.index') }}#dining-experiences"
                   class="footer-link text-decoration-none"
                 >
                   Dining Experiences
@@ -414,7 +415,7 @@
 
               <li>
                 <a
-                  href="#cooking-workshops"
+                  href="{{ url_for('main.index') }}#cooking-workshops"
                   class="footer-link text-decoration-none"
                 >
                   Cooking Workshops
@@ -422,14 +423,17 @@
               </li>
 
               <li>
-                <a href="#tastings" class="footer-link text-decoration-none">
+                <a
+                  href="{{ url_for('main.index') }}#tastings"
+                  class="footer-link text-decoration-none"
+                >
                   Tastings
                 </a>
               </li>
 
               <li>
                 <a
-                  href="#cultural-food-events"
+                  href="{{ url_for('main.index') }}#cultural-food-events"
                   class="footer-link text-decoration-none"
                 >
                   Cultural Food Events

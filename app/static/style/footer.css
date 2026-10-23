@@ -1,0 +1,27 @@
+/* =========================================================
+   Footer
+   ========================================================= */
+
+.page-footer {
+  background-color: #ffffff;
+  color: var(--feastly-text);
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.page-footer h3 {
+  color: var(--feastly-dark);
+}
+
+.footer-link {
+  color: #6b7280;
+  transition: color 0.2s ease;
+}
+
+.footer-link:hover {
+  color: var(--feastly-orange);
+}
+
+.page-footer hr {
+  border-color: rgba(0, 0, 0, 0.08);
+}
+

@@ -1,0 +1,356 @@
+/* =========================================================
+   Header / Navigation
+   ========================================================= */
+
+.logo-icon {
+  width: 48px;
+  height: 48px;
+  background-color: var(--feastly-orange);
+}
+
+.logo-icon svg {
+  width: 32px;
+  height: 32px;
+  color: #ffffff;
+}
+
+.logo-text {
+  color: var(--feastly-orange);
+}
+
+.navbar-link {
+  position: relative;
+  padding: 0.25rem 0;
+  color: var(--feastly-text);
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  transition: color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.navbar-link::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  border-radius: 2px;
+  background-color: var(--feastly-orange);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.navbar-link:hover,
+.navbar-link:focus-visible {
+  color: var(--feastly-orange);
+  outline: none;
+}
+
+.navbar-link:hover::after,
+.navbar-link:focus-visible::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.navbar-link.active {
+  color: var(--feastly-orange);
+  font-weight: 600;
+}
+
+.navbar-link.active::after {
+  transform: scaleX(1);
+}
+
+.navbar-right {
+  width: 46px;
+  height: 46px;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.navbar-right a {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.navbar-right:hover {
+  background-color: #fff0e9 !important;
+  transform: translateY(-1px);
+}
+
+.navbar-right:hover a {
+  color: var(--feastly-orange) !important;
+}
+
+.navbar-right:active {
+  transform: scale(0.97);
+}
+
+/* Sticky navigation */
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+  background-color: var(--feastly-cream);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+/* =========================================================
+   Redesigned Navbar
+   ========================================================= */
+
+.feastly-navbar {
+  display: grid;
+  grid-template-columns: 1fr minmax(200px, 460px) 1fr;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.navbar-search {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  min-height: 46px;
+  padding: 0 1rem;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 999px;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.navbar-search:focus-within {
+  border-color: var(--feastly-orange);
+  box-shadow: 0 0 0 3px rgba(232, 93, 63, 0.12);
+}
+
+.navbar-search svg {
+  flex-shrink: 0;
+  color: #9ca3af;
+}
+
+.navbar-search input {
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--feastly-dark);
+  font-size: 0.9rem;
+}
+
+.navbar-search input::placeholder {
+  color: #9ca3af;
+}
+
+.feastly-navbar > .dropdown,
+.feastly-navbar > .navbar-signin {
+  justify-self: end;
+}
+
+.navbar-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  padding: 0;
+  border: 1px solid #e5e7eb;
+  border-radius: 50%;
+  background: #ffffff;
+  color: var(--feastly-dark);
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.navbar-avatar:hover,
+.navbar-avatar:focus-visible {
+  background: #fff0e9;
+  border-color: var(--feastly-orange);
+  color: var(--feastly-orange);
+}
+
+.navbar-avatar::after {
+  display: none;
+}
+
+.navbar-user-menu {
+  min-width: 220px;
+  margin-top: 0.75rem !important;
+  padding: 0.6rem;
+  border: 1px solid #f0e8e3;
+  border-radius: 14px;
+  box-shadow: 0 12px 30px rgba(17, 24, 39, 0.1);
+}
+
+.navbar-user-menu .dropdown-item {
+  padding: 0.7rem 0.85rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.navbar-user-menu .dropdown-item:hover,
+.navbar-user-menu .dropdown-item:focus {
+  background: #fff0e9;
+  color: var(--feastly-orange);
+}
+
+.navbar-signin {
+  color: var(--feastly-orange);
+  font-size: 0.9rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: color 0.2s ease;
+}
+
+.navbar-signin:hover {
+  color: #c7472c;
+}
+
+/* Mobile */
+
+@media (max-width: 767px) {
+  .feastly-navbar {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 0.75rem;
+  }
+
+  .navbar-search {
+    grid-column: 2;
+    grid-row: 1;
+    min-width: 0;
+    min-height: 40px;
+    padding: 0 0.75rem;
+  }
+
+  .navbar-search input {
+    min-width: 0;
+    font-size: 0.8rem;
+  }
+
+  .navbar-search input::placeholder {
+    font-size: 0.8rem;
+  }
+
+  .feastly-navbar > .dropdown,
+  .feastly-navbar > .navbar-signin {
+    grid-column: 3;
+    grid-row: 1;
+  }
+
+  .navbar-avatar {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* =========================================================
+   Personalized User Dropdown
+   ========================================================= */
+
+.navbar-avatar {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--feastly-orange);
+  background-color: #fff0e9;
+  border-color: #ffd9c9;
+}
+
+.navbar-avatar:hover,
+.navbar-avatar:focus-visible {
+  color: #ffffff;
+  background-color: var(--feastly-orange);
+}
+
+.navbar-user-menu {
+  width: 300px;
+  max-width: calc(100vw - 24px);
+  padding: 0.75rem;
+}
+
+.navbar-profile-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 0.5rem;
+}
+
+.navbar-profile-initials {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background-color: #fff0e9;
+  color: var(--feastly-orange);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.navbar-profile-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 0.2rem;
+}
+
+.navbar-profile-name {
+  color: var(--feastly-dark);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.navbar-profile-email {
+  color: #6b7280;
+  font-size: 0.75rem;
+  overflow-wrap: anywhere;
+}
+
+.navbar-user-menu .navbar-logout {
+  color: var(--feastly-orange);
+  font-weight: 600;
+}
+
+.navbar-user-menu .navbar-logout:hover {
+  background-color: #fff0e9;
+  color: #d94f34;
+}
+
+/* Dropdown navigation icons */
+
+.navbar-user-menu .dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.navbar-user-menu .dropdown-item i {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  flex-shrink: 0;
+  color: #6b7280;
+  font-size: 1.15rem;
+}
+
+.navbar-user-menu .dropdown-item:hover i {
+  color: var(--feastly-orange);
+}
+
+.navbar-user-menu .navbar-logout i {
+  color: var(--feastly-orange);
+}
+

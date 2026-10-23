@@ -1,0 +1,52 @@
+/* =========================================================
+   Booking History Page
+   ========================================================= */
+
+.booking-card-grid {
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.booking-card-grid:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.08) !important;
+}
+
+.booking-card-image {
+  height: 220px;
+}
+
+.booking-detail-label {
+  color: #6c757d;
+  font-size: 0.75rem;
+}
+
+.booking-details-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.booking-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+}
+
+.booking-status--confirmed {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.booking-status--completed {
+  background: #e9ecef;
+  color: #495057;
+}
+

@@ -1,0 +1,116 @@
+/* =========================================================
+   Shared Section Styles
+   ========================================================= */
+
+.section-eyebrow {
+  color: #ea580c;
+  letter-spacing: 0.12em;
+}
+
+.featured-category {
+  color: #f97316;
+  letter-spacing: 0.05em;
+}
+
+.section-icon {
+  width: 18px;
+  height: 18px;
+  color: var(--feastly-muted);
+  flex-shrink: 0;
+}
+
+/* =========================================================
+   Featured Cards
+   ========================================================= */
+
+.featured-card {
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.featured-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 30px rgba(0, 0, 0, 0.1) !important;
+}
+
+.featured-card__image {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+}
+
+.featured-card__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.featured-card:hover .featured-card__image img {
+  transform: scale(1.05);
+}
+
+/* =========================================================
+   Event Cards
+   ========================================================= */
+
+.event-card {
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.event-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 30px rgba(0, 0, 0, 0.09) !important;
+}
+
+.event-card__top {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+}
+
+.event-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.event-card:hover .event-image {
+  transform: scale(1.06);
+}
+
+.event-card .card-title {
+  min-height: 2.7em;
+  margin-bottom: 0;
+  line-height: 1.35;
+}
+
+.event-card .card-body > .d-flex.flex-column.text-secondary {
+  margin-top: 0.9rem !important;
+  margin-bottom: 1rem !important;
+}
+
+.event-card .card-body > .d-flex.flex-column.text-secondary > div {
+  min-height: 24px;
+}
+
+.event-card .btn-dark,
+.featured-card .btn-dark {
+  background-color: var(--feastly-dark);
+  border-color: var(--feastly-dark);
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.event-card .btn-dark:hover,
+.featured-card .btn-dark:hover {
+  background-color: #ea580c;
+  border-color: #ea580c;
+}
+

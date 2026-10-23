@@ -1,0 +1,36 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
+
+/* =========================================================
+   Feastly Theme
+   ========================================================= */
+
+:root {
+  --feastly-orange: #e85d3f;
+  --feastly-orange-light: #f66a3f;
+  --feastly-gold: #f49e3c;
+  --feastly-red: #fc4545;
+
+  --feastly-cream: #fff4ed;
+  --feastly-cream-light: #fffdf7;
+
+  --feastly-text: #374151;
+  --feastly-dark: #111827;
+  --feastly-muted: #9ca3af;
+}
+
+/* =========================================================
+   Global
+   ========================================================= */
+
+html,
+body {
+  overflow-x: clip;
+}
+
+body {
+  margin: 0;
+  background-color: var(--feastly-cream);
+  font-family: "Poppins", sans-serif;
+  color: var(--feastly-text);
+}
+

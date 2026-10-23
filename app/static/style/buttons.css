@@ -1,0 +1,22 @@
+/* =========================================================
+   Shared Buttons
+   ========================================================= */
+
+.feastly-btn {
+  background-color: var(--feastly-orange);
+  color: #ffffff;
+  border: none;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.feastly-btn:hover {
+  background-color: #d94f34;
+  color: #ffffff;
+}
+
+.feastly-btn:active {
+  transform: scale(0.98);
+}
+

@@ -1,0 +1,338 @@
+/* =========================================================
+   Event Details Page
+   ========================================================= */
+
+.event-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.event-status--open {
+  padding: 0.25rem 0.5rem;
+  border-radius: 1rem;
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.event-details-image {
+  min-height: 520px;
+}
+
+.feature-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background-color: #fff1eb;
+}
+
+.feature-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.booking-card {
+  height: 100%;
+}
+
+.booking-card .form-select,
+.booking-card .form-control,
+.comments-section .form-control {
+  padding: 0.8rem 1rem;
+  border-radius: 12px;
+}
+
+.booking-card .form-select:focus,
+.booking-card .form-control:focus,
+.comments-section .form-control:focus {
+  border-color: var(--feastly-orange);
+  box-shadow: 0 0 0 0.2rem rgba(232, 93, 63, 0.12);
+}
+
+.comments-section {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.comment-avatar {
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  background: var(--feastly-cream);
+}
+
+/* =========================================================
+   Create Event Page
+   ========================================================= */
+
+.form-section {
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.form-section-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: var(--feastly-orange);
+  color: #ffffff;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  box-shadow: 0 4px 12px rgba(232, 93, 63, 0.2);
+}
+
+.event-form .form-control,
+.event-form .form-select,
+.event-form .input-group-text {
+  min-height: 50px;
+  border-radius: 12px;
+  border-color: #dee2e6;
+}
+
+.event-form textarea.form-control {
+  min-height: auto;
+}
+
+.event-form .form-control:focus,
+.event-form .form-select:focus {
+  border-color: var(--feastly-orange);
+  box-shadow: 0 0 0 0.2rem rgba(232, 93, 63, 0.12);
+}
+
+.event-form .input-group .input-group-text {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.event-form .input-group .form-control {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.image-upload-area {
+  min-height: 240px;
+  padding: 2rem;
+  border: 2px dashed #d8d8d8;
+  background: #fffaf7;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.image-upload-area:hover {
+  border-color: var(--feastly-orange);
+  background: #fff5ef;
+}
+
+.upload-icon {
+  width: 54px;
+  height: 54px;
+  background: #fff0e9;
+  color: var(--feastly-orange);
+}
+
+.event-form-note {
+  background: #fff5ef;
+  color: #495057;
+}
+
+.event-form-sidebar {
+  position: sticky;
+  top: 2rem;
+}
+
+/* Acknowledgement of Country */
+
+.acknowledgement-options {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 0.75rem;
+  row-gap: 0.85rem;
+  align-items: center;
+}
+
+.ack-choice {
+  accent-color: var(--feastly-orange);
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.acknowledgement-options > label {
+  cursor: pointer;
+}
+
+.ack-generic-content,
+.ack-custom-content {
+  grid-column: 1 / -1;
+  display: none;
+}
+
+.ack-generic-content {
+  background-color: #fff5ef;
+  border: 1px solid #ffd9c9;
+}
+
+.ack-generic-content p {
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+
+.acknowledgement-options:has(#ack-generic:checked) .ack-generic-content {
+  display: block;
+}
+
+.acknowledgement-options:has(#ack-custom:checked) .ack-custom-content {
+  display: block;
+}
+
+/* Create Event - Field Validation */
+
+.event-form .event-field-error {
+  display: block;
+  width: 100%;
+  margin-top: 0.4rem;
+  color: #dc3545;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.event-form .form-control.is-invalid,
+.event-form .form-select.is-invalid {
+  border-color: #dc3545;
+}
+
+.event-form .form-control.is-invalid:focus,
+.event-form .form-select.is-invalid:focus {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.12);
+}
+
+.event-form .ack-radio-error {
+  grid-column: 1 / -1;
+}
+
+/* Event Image Upload */
+
+.event-image-picker {
+  position: relative;
+}
+
+.event-image-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.event-image-dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem;
+  min-height: 220px;
+  padding: 1.5rem;
+  border: 2px dashed #ded6d1;
+  border-radius: 16px;
+  background: #fffaf7;
+  cursor: pointer;
+  text-align: center;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s;
+}
+
+.event-image-dropzone:hover,
+.event-image-picker:focus-within .event-image-dropzone {
+  border-color: var(--feastly-orange);
+  background: #fff3eb;
+}
+
+.event-image-upload-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #fff0e9;
+  color: var(--feastly-orange);
+  font-size: 1.6rem;
+}
+
+.event-image-dropzone strong {
+  color: var(--feastly-dark);
+  font-size: 0.95rem;
+}
+
+.event-image-format {
+  color: #6b7280;
+  font-size: 0.8rem;
+}
+
+.event-image-browse {
+  margin-top: 0.35rem;
+  padding: 0.6rem 1rem;
+  border: 1px solid #ffd9c9;
+  border-radius: 9px;
+  background: #ffffff;
+  color: var(--feastly-orange);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.event-image-selected {
+  display: none;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 0.85rem;
+  color: #166534;
+  font-size: 0.85rem;
+}
+
+.event-image-picker:has(.event-image-input:valid) .event-image-selected {
+  display: flex;
+}
+
+.event-image-picker:has(.event-image-input:valid) .event-image-dropzone {
+  border-color: #86c7a1;
+  background: #f5fcf7;
+}
+
+/* My Events - Feastly buttons */
+
+.btn-feastly {
+  background-color: var(--feastly-orange);
+  border: 1px solid var(--feastly-orange);
+  color: #fff;
+  font-weight: 600;
+  border-radius: 10px;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.btn-feastly:hover,
+.btn-feastly:focus-visible {
+  background-color: #d94e35;
+  border-color: #d94e35;
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.btn-feastly:active {
+  background-color: #c8452f;
+  border-color: #c8452f;
+  color: #fff;
+}
+

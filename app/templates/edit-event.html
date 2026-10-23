@@ -352,72 +352,102 @@
 
             <!-- Section 06: Acknowledgement of Country -->
             <div class="form-section bg-white rounded-4 shadow-sm p-4">
-  <div class="mb-4">
-    <span class="form-section-number">06</span>
-    <h2 class="h4 fw-bold mt-2 mb-1">
-      Acknowledgement of Country
-    </h2>
-    <p class="text-secondary mb-0">
-      Choose whether to include an Acknowledgement of Country
-      for your event.
-    </p>
-  </div>
+              <div class="mb-4">
+                <span class="form-section-number">06</span>
+                <h2 class="h4 fw-bold mt-2 mb-1">Acknowledgement of Country</h2>
+                <p class="text-secondary mb-0">Choose whether to include an Acknowledgement of Country for your event.</p>
+              </div>
 
-  <div class="acknowledgement-options">
-    <input type="radio" class="ack-choice"
-      id="ack-none" name="{{ form.acknowledgement_type.name }}"
-      value="None"
-      {% if (form.acknowledgement_type.data or 'None') == 'None' %}checked{% endif %}>
+              <div class="p-3 rounded-3 bg-light mb-4">
+                <h3 class="h6 fw-bold">What is an Acknowledgement of Country?</h3>
+                <p class="small mb-2">An Acknowledgement of Country recognises Aboriginal and Torres Strait Islander peoples as the Traditional Custodians of Country and respects their continuing connections to land, waters, culture and community. Thoughtful acknowledgements contribute to reconciliation by encouraging recognition, respect and learning.</p>
+                <p class="small mb-0"><strong>How is it different from a Welcome to Country?</strong> An Acknowledgement can be offered by anyone. A Welcome to Country is given by a Traditional Owner of the Country where the event takes place, or someone authorised to do so. An Acknowledgement is not a substitute for a Welcome to Country.</p>
+              </div>
 
-    <label for="ack-none">None</label>
+              <div class="acknowledgement-options">
+                <input type="radio" class="ack-choice" id="ack-none" name="{{ form.acknowledgement_type.name }}" value="None" {% if (form.acknowledgement_type.data or 'None') == 'None' %}checked{% endif %}>
+                <label for="ack-none">No Acknowledgement of Country</label>
 
-    <input type="radio" class="ack-choice"
-      id="ack-generic" name="{{ form.acknowledgement_type.name }}"
-      value="Generic"
-      {% if form.acknowledgement_type.data == 'Generic' %}checked{% endif %}>
+                <input type="radio" class="ack-choice" id="ack-generic" name="{{ form.acknowledgement_type.name }}" value="Generic" {% if form.acknowledgement_type.data == 'Generic' %}checked{% endif %}>
+                <label for="ack-generic">Generic Acknowledgement</label>
 
-    <label for="ack-generic">Generic Acknowledgement</label>
+                <input type="radio" class="ack-choice" id="ack-custom" name="{{ form.acknowledgement_type.name }}" value="Enhanced" {% if form.acknowledgement_type.data == 'Enhanced' %}checked{% endif %}>
+                <label for="ack-custom">Enhanced Acknowledgement</label>
 
-    <input type="radio" class="ack-choice"
-      id="ack-custom" name="{{ form.acknowledgement_type.name }}"
-      value="Enhanced"
-      {% if form.acknowledgement_type.data == 'Enhanced' %}checked{% endif %}>
+                {% for error in form.acknowledgement_type.errors %}
+                  <div class="event-field-error ack-radio-error" role="alert">{{ error }}</div>
+                {% endfor %}
 
-    <label for="ack-custom">Custom Acknowledgement</label>
+                <div class="ack-generic-content mt-3 p-3 rounded-3">
+                  <p class="fw-semibold mb-2">Acknowledgement preview</p>
+                  <p class="mb-0">We acknowledge the Traditional Custodians of the land on which this event takes place and pay our respects to Elders past and present.</p>
+                </div>
 
-    {% for error in form.acknowledgement_type.errors %}
-      <div class="event-field-error ack-radio-error" role="alert">{{ error }}</div>
-    {% endfor %}
+                <div class="ack-custom-content mt-3">
+                  <div class="p-3 rounded-3 bg-light mb-3">
+                    <h3 class="h6 fw-bold">Build a meaningful acknowledgement</h3>
+                    <ol class="small mb-2 ps-3">
+                      <li>Research whose Country your <strong>specific venue</strong> is on. Check local Traditional Owner organisations, councils and Land Councils; don't assume one name covers an entire city.</li>
+                      <li>Confirm the preferred name and spelling using reliable local sources. If sources disagree, seek guidance rather than guessing.</li>
+                      <li>Consider why recognising Country matters for your event. Acknowledge the continuing connection of Traditional Custodians to Country and pay respects to Elders past and present.</li>
+                      <li>Write in your own respectful words, using a Traditional Custodian name only when you have verified it.</li>
+                    </ol>
+                    <p class="small mb-0"><strong>Suggested structure:</strong> “We acknowledge [verified Traditional Custodians] as the Traditional Custodians of the Country where [event] is held. We recognise their continuing connection to Country and pay our respects to Elders past and present.” Adapt this thoughtfully; it is a starting point, not a substitute for research.</p>
+                  </div>
 
-    <div class="ack-generic-content mt-3 p-3 rounded-3">
-      <p class="fw-semibold mb-2">Acknowledgement preview</p>
-      <p class="mb-0">
-        We acknowledge the Traditional Custodians of the land
-        on which this event takes place and pay our respects
-        to Elders past and present.
-      </p>
-    </div>
-
-    <div class="ack-custom-content mt-3">
-      <label for="acknowledgement-text" class="form-label fw-medium">
-        Custom acknowledgement
-      </label>
-
-      <textarea class="form-control {% if form.acknowledgement_text.errors %}is-invalid{% endif %}"
-        id="acknowledgement-text"
-        name="{{ form.acknowledgement_text.name }}"
-        rows="4" maxlength="2000"
-        placeholder="Write your Acknowledgement of Country...">{{ form.acknowledgement_text.data or '' }}</textarea>
+                  <label for="acknowledgement-text" class="form-label fw-medium">Your researched acknowledgement</label>
+                  <textarea class="form-control {% if form.acknowledgement_text.errors %}is-invalid{% endif %}" id="acknowledgement-text" name="{{ form.acknowledgement_text.name }}" rows="5" maxlength="2000" placeholder="Write your location-specific Acknowledgement of Country...">{{ form.acknowledgement_text.data or '' }}</textarea>
                   {% for error in form.acknowledgement_text.errors %}
                     <div class="event-field-error" role="alert">{{ error }}</div>
                   {% endfor %}
+                  <div class="form-text">Maximum 2,000 characters. Research and verify Traditional Custodian names before publishing.</div>
+                </div>
+              </div>
 
-      <div class="form-text">
-        Enter your own acknowledgement (maximum 2,000 characters).
-      </div>
-    </div>
-  </div>
-</div>
+              <div class="mt-4">
+                <details class="border rounded-3 p-3 mb-3">
+                  <summary class="fw-semibold">Traditional Custodians: Australian capital-city starting points</summary>
+                  <p class="small text-secondary mt-3 mb-2">These examples are starting points for research, not definitive boundaries or automatic names to insert. Different areas of a city may be on different Country, and some identifications are contested. Confirm the exact venue with local sources.</p>
+                  <div class="table-responsive">
+                    <table class="table table-sm small align-middle mb-2">
+                      <thead><tr><th scope="col">City</th><th scope="col">Names to research and verify locally</th></tr></thead>
+                      <tbody>
+                        <tr><td>Brisbane</td><td>Turrbal; Yuggera / Jagera</td></tr>
+                        <tr><td>Sydney</td><td>Gadigal (central Sydney); other groups across greater Sydney</td></tr>
+                        <tr><td>Melbourne</td><td>Wurundjeri and Bunurong / Boon Wurrung (depending on location)</td></tr>
+                        <tr><td>Canberra</td><td>Ngunnawal; Ngambri (recognition and naming are contested)</td></tr>
+                        <tr><td>Adelaide</td><td>Kaurna</td></tr>
+                        <tr><td>Perth</td><td>Whadjuk Noongar</td></tr>
+                        <tr><td>Hobart</td><td>muwinina; consult local Tasmanian Aboriginal organisations for appropriate acknowledgement</td></tr>
+                        <tr><td>Darwin</td><td>Larrakia</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </details>
+
+                <details class="border rounded-3 p-3 mb-3">
+                  <summary class="fw-semibold">Where to research Traditional Custodians</summary>
+                  <p class="small mt-3 mb-2">Use these resources alongside local Traditional Owner organisations and councils. No single national map can reliably establish the Traditional Custodians of every street address.</p>
+                  <ul class="small mb-0">
+                    <li><a href="https://www.reconciliation.org.au/reconciliation/acknowledgement-of-country-and-welcome-to-country/" target="_blank" rel="noopener noreferrer">Reconciliation Australia: Acknowledgement and Welcome to Country</a></li>
+                    <li><a href="https://aiatsis.gov.au/whose-country" target="_blank" rel="noopener noreferrer">AIATSIS: Whose Country am I on?</a></li>
+                    <li><a href="https://aiatsis.gov.au/explore/map-indigenous-australia" target="_blank" rel="noopener noreferrer">AIATSIS: Map of Indigenous Australia</a> (indicative, not exact boundaries)</li>
+                    <li><a href="https://www.indigenous.gov.au/" target="_blank" rel="noopener noreferrer">Indigenous.gov.au</a> (government information and links)</li>
+                  </ul>
+                </details>
+
+                <details class="border rounded-3 p-3">
+                  <summary class="fw-semibold">Common mistakes and cultural considerations</summary>
+                  <ul class="small mt-3 mb-0">
+                    <li>Do not guess Traditional Custodian names or assume a capital-city reference applies to every suburb.</li>
+                    <li>Do not treat indicative maps as precise land boundaries or ignore contested identifications.</li>
+                    <li>Check spelling, terminology and pronunciation; ask an appropriate local organisation when uncertain.</li>
+                    <li>Do not describe an Acknowledgement as a Welcome to Country or claim to speak on behalf of Traditional Owners.</li>
+                    <li>Avoid tokenistic copy-and-paste statements. Consider the event, its location and your responsibilities to Country.</li>
+                  </ul>
+                </details>
+              </div>
+            </div>
           </div>
         </div>
 

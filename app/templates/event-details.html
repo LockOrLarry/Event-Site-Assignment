@@ -117,10 +117,11 @@
             {{ event.description }}
           </p>
 
-          {% if event.acknowledgement_text %}
-          <p class="text-secondary">
-            {{ event.acknowledgement_text }}
-          </p>
+          {% if event.acknowledgement_type in ['Generic', 'Enhanced'] and event.acknowledgement_text %}
+          <section class="bg-white rounded-4 shadow-sm p-4 mt-4" aria-labelledby="country-acknowledgement-heading">
+            <h2 id="country-acknowledgement-heading" class="h4 fw-bold mb-3">Acknowledgement of Country</h2>
+            <p class="text-secondary mb-0" style="white-space: pre-line;">{{ event.acknowledgement_text }}</p>
+          </section>
           {% endif %}
 
           <h2 class="fw-bold mt-5 mb-3">What to expect</h2>

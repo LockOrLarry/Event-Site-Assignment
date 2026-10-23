@@ -1,6 +1,5 @@
 import json, re
 from . import db, encoder
-from sentence_transformers import util
 from datetime import datetime
 from .models import User, Event, Booking, Category, Comment
 
@@ -275,6 +274,7 @@ def build_embedding_text(event):
 
 
 def update_event_embedding(event):
+    return
     embedding = encoder.encode(build_embedding_text(event))
     event.description_embedding = json.dumps(embedding.tolist())
 
@@ -325,6 +325,7 @@ def has_title_or_category_match(query, event):
 
 
 def search_events(query, limit=8):
+    return keyword_search_events(query, limit)
     query_embedding = encoder.encode(query)
 
     events = db.session.scalars(

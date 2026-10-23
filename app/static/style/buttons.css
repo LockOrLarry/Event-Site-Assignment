@@ -20,3 +20,23 @@
   transform: scale(0.98);
 }
 
+/* Feastly search navigation */
+.search-mode-tabs .nav-link {
+  color: #ef5b3f;
+  border-radius: 8px;
+}
+
+.search-mode-tabs .nav-link:hover {
+  color: #d94a30;
+  background-color: rgba(239, 91, 63, 0.08);
+}
+
+.search-mode-tabs .nav-link.active {
+  background-color: #ef5b3f;
+  color: #ffffff;
+}
+
+.search-mode-tabs .nav-link.active:hover {
+  background-color: #d94a30;
+  color: #ffffff;
+}

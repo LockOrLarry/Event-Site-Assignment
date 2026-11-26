@@ -2,7 +2,7 @@
 
 A Flask web app for finding, booking and running local events. Users can browse and search events, book tickets, comment, and create or edit their own listings.
 
-Built by a team of students for QUT's IAB207 (Rapid Web Application Development) unit in 2026.
+Built by [Lachlan](https://github.com/LockOrLarry), [Timur](https://github.com/Timur778), and [Josh](https://github.com/joshXIXI) for QUT's IAB207 (Rapid Web Application Development) unit in 2026.
 
 ## Features
 
